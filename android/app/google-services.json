@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "862376132466",
+    "firebase_url": "https://saborna-crkva.firebaseio.com",
+    "project_id": "saborna-crkva",
+    "storage_bucket": "saborna-crkva.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:862376132466:android:b78ac3d3daeab9d61127eb",
+        "android_client_info": {
+          "package_name": "com.example.saborna_crkva"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "862376132466-2s5qmtsf9d7teier4c2n2kp27m1c3hm4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaRBlc5zAsyMQMl7ZM-9D0sCrgkUOGH2c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "862376132466-2s5qmtsf9d7teier4c2n2kp27m1c3hm4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
