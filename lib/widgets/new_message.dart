@@ -41,6 +41,14 @@ class _NewMessageState extends State<NewMessage> {
       'senderId': widget.senderId,
       'sender': widget.sender
     });
+
+    //test try to update document -- add last message
+    var docRef = Firestore.instance.collection("chats").document(documentId);
+    docRef.updateData({
+      'lastMessage': _enteredMessage,
+      'sender': widget.sender
+    });
+    //end test
     _controller.clear();
   }
 

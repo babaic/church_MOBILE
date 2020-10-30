@@ -26,7 +26,9 @@ dependencies:
   provider: ^4.3.2+1
   http: ^0.12.2
   shared_preferences: ^0.5.12+2
+  intl: ^0.16.1
   cloud_firestore: ^0.13.5
+  carousel_slider: ^2.3.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -53,6 +55,7 @@ flutter:
     - assets/images/crkva.png
     - assets/images/mostar.jpg
     - assets/images/paper.jpg
+    - assets/images/main.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

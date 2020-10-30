@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:saborna_crkva/providers/auth.dart';
+import 'package:saborna_crkva/screens/obavjestenja_screen.dart';
 import 'package:saborna_crkva/screens/pitajsvecenika_screen.dart';
 
+import 'conversations_screen.dart';
+import 'novosti_screen.dart';
+
 class HomeScreen extends StatelessWidget {
-  Widget _wSelectItems(String naslov, IconData ikona, Function funkcija) {
+  Widget _wSelectItems(String naslov, IconData ikona, Function funkcija, Size devSize) {
     return Material(
       color: Colors.white.withOpacity(0.0),
       child: InkWell(
@@ -16,8 +20,10 @@ class HomeScreen extends StatelessWidget {
           ),
           padding: EdgeInsets.all(5),
           margin: EdgeInsets.only(bottom: 15),
-          height: 115,
-          width: 180,
+          // height: 115,
+          // width: 180,
+          height: devSize.height * 0.15,
+          width: devSize.width * 0.4,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -44,6 +50,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+    final userData = Provider.of<Auth>(context, listen: false).user;
     return Scaffold(
       //backgroundColor: Theme.of(context).primaryColorLight,
       appBar: AppBar(
@@ -60,19 +67,18 @@ class HomeScreen extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              child: Text('Dobrodošli Ime i prezime'),
+              child: Text('Dobrodošli '+ userData.username),
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColorLight,
               ),
             ),
             ListTile(
-              title: Text('Item 1'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
+              leading: Icon(Icons.message),
+              title: Text('Poruke'),
+              onTap: () => Navigator.of(context).popAndPushNamed(ConversationsScreen.routeName),
             ),
             ListTile(
+              leading: Icon(Icons.exit_to_app),
               title: Text('Odjavi se'),
               onTap: () {
                 Provider.of<Auth>(context, listen: false).logout();
@@ -91,12 +97,11 @@ class HomeScreen extends StatelessWidget {
               fit: BoxFit.cover,
               colorFilter: new ColorFilter.mode(
                   Colors.black.withOpacity(0.2), BlendMode.dstATop),
-              image: new NetworkImage(
-                'https://sa-c.net/images/stories/MO_news/saborna_crkva/saborna_crkva_mostar_fasada.jpg',
+              image: new AssetImage(
+                'assets/images/main.jpg',
               ),
             ),
           ),
-          //child: Image.network('https://sa-c.net/images/stories/MO_news/saborna_crkva/saborna_crkva_mostar_fasada.jpg', fit: BoxFit.cover),
         ),
         Container(
           width: deviceSize.width,
@@ -106,22 +111,22 @@ class HomeScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _wSelectItems('Pitaj svećenika', Icons.message, () => Navigator.of(context).pushNamed(PitajSvecenikaScreen.routeName)),
-                  _wSelectItems('Obavijesti', Icons.notifications, null),
+                  _wSelectItems('Pitaj svećenika', Icons.message, () => Navigator.of(context).pushNamed(PitajSvecenikaScreen.routeName), deviceSize),
+                  _wSelectItems('Obavijesti', Icons.notifications, () => Navigator.of(context).pushNamed(ObavjestenjaScreen.routeName), deviceSize),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _wSelectItems('Zakaži obred', Icons.date_range, null),
-                  _wSelectItems('Novosti', Icons.photo_library, null),
+                  _wSelectItems('Zakaži obred', Icons.date_range, null, deviceSize),
+                  _wSelectItems('Novosti', Icons.photo_library, () => Navigator.of(context).pushNamed(NovostiScreen.routeName), deviceSize),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _wSelectItems('Korisni kontakti', Icons.contact_mail, null),
-                  _wSelectItems('Doniraj', Icons.attach_money, null),
+                  _wSelectItems('Korisni kontakti', Icons.contact_mail, null, deviceSize),
+                  _wSelectItems('Doniraj', Icons.attach_money, null, deviceSize),
                 ],
               ),
             ],

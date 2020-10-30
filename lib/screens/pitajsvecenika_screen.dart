@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/providers/svecenik.dart';
 import 'package:saborna_crkva/widgets/svecenikCard.dart';
 
@@ -12,11 +13,14 @@ class PitajSvecenikaScreen extends StatefulWidget {
 class _PitajSvecenikaScreenState extends State<PitajSvecenikaScreen> {
   @override
   Widget build(BuildContext context) {
+    final userData = Provider.of<Auth>(context, listen: false).user;
+    bool imeprezimeNull = userData.username == null;
+    print(imeprezimeNull);
     return Scaffold(
         appBar: AppBar(
           title: Text('Pitaj svećenika'),
         ),
-        body: FutureBuilder(
+        body: imeprezimeNull ? Center(child: Text('Potrebno unijeti ime i prezime ukoliko želite postaviti pitanje svećeniku.', textAlign: TextAlign.center,),) : FutureBuilder(
           future: Provider.of<Svecenik>(context, listen: false).fetchAndSetSvecenici(),
           builder: (ctx, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {

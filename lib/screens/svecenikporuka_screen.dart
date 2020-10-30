@@ -22,7 +22,7 @@ class _SvecenikPorukaScreenState extends State<SvecenikPorukaScreen> {
   String documentId;
   bool futureFinished = false;
   Map<String, int> sortedIds;
-
+  List<String> ucesnici;
 
   Map<String, String> userIds(int id1, int id2) {
     Map<String, String> sorted = new Map();
@@ -41,9 +41,13 @@ class _SvecenikPorukaScreenState extends State<SvecenikPorukaScreen> {
 
   String createDocument(String userkey1, String userkey2) {
     var docRef = Firestore.instance.collection('chats').document();
+    var userData = Provider.of<Auth>(context, listen: false).user;
+
     Firestore.instance.runTransaction((transaction) async {
       await transaction.set(docRef, {
-        'userkey': [userkey1, userkey2]
+        'userkey': [userkey1, userkey2],
+        'svecenikId': primaocId,
+        'ucesnici': [svecenikImePrezime, userData.username]
       });
     });
     print('creating document... ' + docRef.documentID);
@@ -54,14 +58,22 @@ class _SvecenikPorukaScreenState extends State<SvecenikPorukaScreen> {
   Widget build(BuildContext context) {
     final user = Provider.of<Auth>(context, listen: false).user;
     final args =
-        ModalRoute.of(context).settings.arguments as Map<String, String>;
+        ModalRoute.of(context).settings.arguments as Map<String, Object>;
     svecenikImePrezime = args['imePrezime'];
     primaocId = args['svecenikId'];
+    ucesnici = args['ucesnici'];
+
+    print('ucesnici');
+    print(ucesnici);
+    if(primaocId == user.id.toString()) {
+      primaocId = ucesnici[0] == primaocId ? ucesnici[1] : ucesnici[0];
+    }
+
     var sorted = userIds(user.id, int.parse(primaocId));
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Napiši poruku ' + svecenikImePrezime + ' ' + primaocId),
+          title: Text('Napiši poruku ' + svecenikImePrezime),
           actions: [],
         ),
         body: FutureBuilder(
@@ -85,7 +97,7 @@ class _SvecenikPorukaScreenState extends State<SvecenikPorukaScreen> {
             builder: (ctx, futureSnapshot) {
               if (futureSnapshot.connectionState == ConnectionState.waiting) {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColorDark)),
                 );
               }
               return Column(
@@ -99,9 +111,10 @@ class _SvecenikPorukaScreenState extends State<SvecenikPorukaScreen> {
                     builder: (ctx, streamSnapshot) {
                       if (streamSnapshot.connectionState ==
                           ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColorDark)));
                       }
                       final documents = streamSnapshot.data.documents;
+                      print(documents);
                       return ListView.builder(
                           reverse: true,
                           itemCount: documents.length,
