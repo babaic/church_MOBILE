@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/screens/obavjestenja_screen.dart';
@@ -45,6 +46,31 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+  
+  void _handleSendNotification() async {
+    var status = await OneSignal.shared.getPermissionSubscriptionState();
+
+    //var playerId = status.subscriptionStatus.userId;
+    var playerId = '94d71f36-794f-4b46-b2d7-4eaac3ba149d';
+
+    var imgUrlString =
+        "http://cdn1-www.dogtime.com/assets/uploads/gallery/30-impossibly-cute-puppies/impossibly-cute-puppy-2.jpg";
+
+    var notification = OSCreateNotification(
+        playerIds: [playerId],
+        content: "this is a test from OneSignal's Flutter SDK",
+        heading: "Test Notification",
+        iosAttachments: {"id1": imgUrlString},
+        bigPicture: imgUrlString,
+        buttons: [
+          OSActionButton(text: "test1", id: "id1"),
+          OSActionButton(text: "test2", id: "id2")
+        ]);
+
+    var response = await OneSignal.shared.postNotification(notification);
+
+    print("Sent notification with response: $response");
   }
 
   @override

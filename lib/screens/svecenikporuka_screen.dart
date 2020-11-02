@@ -63,8 +63,6 @@ class _SvecenikPorukaScreenState extends State<SvecenikPorukaScreen> {
     primaocId = args['svecenikId'];
     ucesnici = args['ucesnici'];
 
-    print('ucesnici');
-    print(ucesnici);
     if(primaocId == user.id.toString()) {
       primaocId = ucesnici[0] == primaocId ? ucesnici[1] : ucesnici[0];
     }
@@ -114,7 +112,6 @@ class _SvecenikPorukaScreenState extends State<SvecenikPorukaScreen> {
                         return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColorDark)));
                       }
                       final documents = streamSnapshot.data.documents;
-                      print(documents);
                       return ListView.builder(
                           reverse: true,
                           itemCount: documents.length,
@@ -128,7 +125,7 @@ class _SvecenikPorukaScreenState extends State<SvecenikPorukaScreen> {
                               ));
                     },
                   )),
-                  NewMessage(user.id.toString(), user.username, documentId),
+                  NewMessage(user.id.toString(), user.username, documentId, primaocId),
                 ],
               );
             }));
