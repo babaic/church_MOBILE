@@ -26,8 +26,6 @@ class ConversationsScreen extends StatelessWidget {
                       .getDocuments()
                       .then((value) {
                     value.documents.forEach((element) {
-                      print(element.documentID);
-                      print(element.data['lastMessage']);
                       var otherUser;
                       if(element.data['ucesnici'][0] == userData.username) {
                         otherUser = element.data['ucesnici'][1];
@@ -36,7 +34,6 @@ class ConversationsScreen extends StatelessWidget {
                         otherUser = element.data['ucesnici'][0];
                       }
                       if(element.data.length >=5) {
-                        print(element.data['userkey'][0]);
                         List<String> ids = new List<String>();
                         ids.add(element.data['userkey'][0]);
                         ids.add(element.data['userkey'][1]);

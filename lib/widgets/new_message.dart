@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/providers/poruke.dart';
@@ -8,9 +9,9 @@ class NewMessage extends StatefulWidget {
   final String senderId;
   final String sender;
   final String documentId;
+  final String primaocId;
 
-
-  NewMessage(this.senderId, this.sender, this.documentId);
+  NewMessage(this.senderId, this.sender, this.documentId, this.primaocId);
 
   @override
   _NewMessageState createState() => _NewMessageState();
@@ -23,18 +24,17 @@ class _NewMessageState extends State<NewMessage> {
   Future<void> _sendMessage() async {
     var documentId = widget.documentId;
 
-    if(widget.senderId == null) {
+    if (widget.senderId == null) {
       print('senderId is empty');
       return;
     }
 
-    if(widget.documentId == null) {
+    if (widget.documentId == null) {
       print('documentid is empty');
       return;
     }
-    print('sending to '+ documentId);
     FocusScope.of(context).unfocus();
-    
+
     Firestore.instance.collection('/chats/$documentId/messages').add({
       'text': _enteredMessage,
       'createdAt': Timestamp.now(),
@@ -44,18 +44,39 @@ class _NewMessageState extends State<NewMessage> {
 
     //test try to update document -- add last message
     var docRef = Firestore.instance.collection("chats").document(documentId);
-    docRef.updateData({
-      'lastMessage': _enteredMessage,
-      'sender': widget.sender
-    });
+    docRef
+        .updateData({'lastMessage': _enteredMessage, 'sender': widget.sender});
     //end test
     _controller.clear();
+
+    //SEND NOTIFICATION VIA ONESIGNAL
+    _handleSendNotification(userId: widget.primaocId, content: _enteredMessage);
+  }
+
+  void _handleSendNotification({String content, String userId}) async {
+    List<String> devicesId = [];
+    Firestore.instance
+        .collection('/notifications/$userId/device')
+        .getDocuments()
+        .then((value) async {
+      value.documents.forEach((element) {
+        devicesId.add(element.data['deviceId']);
+      });
+      if (devicesId.length != 0) {
+        var notification = OSCreateNotification(
+          playerIds: devicesId,
+          content: content,
+          heading: "Imate novu poruku",
+        );
+
+        var response = await OneSignal.shared.postNotification(notification);
+        print("Sent notification with response: $response");
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    print('new message');
-    //print('widget documentId ' +widget.documentId);
     return Container(
       margin: EdgeInsets.only(top: 8),
       padding: EdgeInsets.all(8),

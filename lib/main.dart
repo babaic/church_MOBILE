@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/providers/obavijesti.dart';
@@ -21,8 +22,19 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    initPlatformState();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -58,9 +70,28 @@ class MyApp extends StatelessWidget {
               NovostiScreen.routeName: (ctx) => NovostiScreen(),
               NovostiDetailsScreen.routeName: (ctx) => NovostiDetailsScreen(),
               ObavjestenjaScreen.routeName: (ctx) => ObavjestenjaScreen(),
-              ObavijestiDetailsScreen.routeName: (ctx) => ObavijestiDetailsScreen()
+              ObavijestiDetailsScreen.routeName: (ctx) =>
+                  ObavijestiDetailsScreen()
             },
           ),
         ));
+  }
+
+  Future<void> initPlatformState() async {
+    OneSignal.shared.init("24c544c9-3eff-40b8-bae3-b8d58ab01ee9", iOSSettings: {
+      OSiOSSettings.autoPrompt: false,
+      OSiOSSettings.inAppLaunchUrl: false
+    });
+
+    OneSignal.shared.setInFocusDisplayType(OSNotificationDisplayType.notification);
+
+    OneSignal.shared.setNotificationReceivedHandler((OSNotification notification) {
+      print("Received notification: \n${notification.jsonRepresentation().replaceAll("\\n", "\n")}");
+    });
+
+    OneSignal.shared
+        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+      print("Opened notification: \n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}");
+    });
   }
 }

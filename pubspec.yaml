@@ -29,6 +29,7 @@ dependencies:
   intl: ^0.16.1
   cloud_firestore: ^0.13.5
   carousel_slider: ^2.3.1
+  onesignal_flutter: ^2.6.1
 
 
   # The following adds the Cupertino Icons font to your application.

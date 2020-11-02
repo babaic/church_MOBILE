@@ -28,8 +28,31 @@ class _AuthScreenState extends State<AuthScreen> {
     }
 
     if (authMode == AuthMode.Login) {
-      await authProvider.login(_authData['Email'], _authData['Password']);
+      try {
+        await authProvider.login(_authData['Email'], _authData['Password']);
+      }
+      catch(error) {
+        _showErrorDialog(error);
+      }
     }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+            title: Text('Greška!'),
+            content: Text(message),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+              )
+            ],
+          ),
+    );
   }
 
   @override
