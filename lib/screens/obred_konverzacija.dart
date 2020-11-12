@@ -76,7 +76,12 @@ class _ObredKonverzacijaScreenState extends State<ObredKonverzacijaScreen> {
       appBar: AppBar(
         title: Text('Konverzacija'),
         actions: [
-          FlatButton.icon(onPressed: (){}, icon: Icon(Icons.lock), label: Text('Završi'), textColor: Colors.white,)
+          if(user.role == 'Svecenik')
+          FlatButton.icon(onPressed: () {
+            setState(() {
+              Provider.of<Obredi>(context, listen: false).updateStatus(args, 'Zavrseno');
+            });
+          }, icon: Icon(Icons.lock), label: Text('Završi'), textColor: Colors.white,)
         ],
       ),
       body: FutureBuilder(
@@ -128,7 +133,7 @@ class _ObredKonverzacijaScreenState extends State<ObredKonverzacijaScreen> {
                   },
                 ),
               ),
-              NewMessage(collectionName: 'obredi', senderId: user.id.toString(), sender: user.username, documentId: documentId, primaocId: null, primaocListId: userids, obredId: args,),
+              Provider.of<Obredi>(context, listen: false).isZavrsen(args) ? Center(child: Container(height: 30, child: Text('Konverzacija je završena.')),) : NewMessage(collectionName: 'obredi', senderId: user.id.toString(), sender: user.username, documentId: documentId, primaocId: null, primaocListId: userids, obredId: args,),
             ],
           );
         }

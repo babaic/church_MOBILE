@@ -9,6 +9,20 @@ import 'obred_konverzacija.dart';
 class ObredZahtjeviScreen extends StatelessWidget {
   static const routeName = '/obredi-zahtjevi';
 
+  Widget w_IconToDisplay(String status) {
+    if(status == 'Odgovoreno') {
+      return Icon(Icons.check_circle,color: Colors.green);
+    }
+    else if(status == 'Nije odgovoreno') {
+      return Icon(Icons.remove_circle ,color: Colors.red);
+    }
+    else if(status == 'Zavrseno') {
+      return Icon(Icons.lock);
+    }
+    else {
+      return Icon(Icons.error);
+    }
+  }
   Widget w_ZahtjevCard(
       {String naziv,
       String imePrezime,
@@ -75,7 +89,8 @@ class ObredZahtjeviScreen extends StatelessWidget {
                 Spacer(),
                 Column(
                   children: [
-                    status == 'Odgovoreno' ? Icon(Icons.check_circle,color: Colors.green) : Icon(Icons.remove_circle ,color: Colors.red),
+                    w_IconToDisplay(status),
+                    //status == 'Odgovoreno' ? Icon(Icons.check_circle,color: Colors.green) : Icon(Icons.remove_circle ,color: Colors.red),
                     Text(status)
                   ],
                 )
