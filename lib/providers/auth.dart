@@ -8,6 +8,8 @@ import 'package:saborna_crkva/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth with ChangeNotifier {
+  //NOTICE!
+  //Think about adding static var for user data
   String _token;
   int _userId;
   String _role;

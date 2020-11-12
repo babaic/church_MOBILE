@@ -3,9 +3,13 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/screens/obavjestenja_screen.dart';
+import 'package:saborna_crkva/screens/obred_zahtjevi_screen.dart';
 import 'package:saborna_crkva/screens/pitajsvecenika_screen.dart';
+import 'package:saborna_crkva/screens/zakazi_obred_screen.dart';
 
 import 'conversations_screen.dart';
+import 'donacije_screen.dart';
+import 'doniraj_screen.dart';
 import 'novosti_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -103,6 +107,12 @@ class HomeScreen extends StatelessWidget {
               title: Text('Poruke'),
               onTap: () => Navigator.of(context).popAndPushNamed(ConversationsScreen.routeName),
             ),
+            if (Provider.of<Auth>(context).user.role.toLowerCase() == 'blagajnik')
+            ListTile(
+              leading: Icon(Icons.attach_money),
+              title: Text('Donacije'),
+              onTap: () => Navigator.of(context).popAndPushNamed(DonacijeScreen.routeName),
+            ),
             ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text('Odjavi se'),
@@ -144,15 +154,17 @@ class HomeScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _wSelectItems('Zakaži obred', Icons.date_range, null, deviceSize),
-                  _wSelectItems('Novosti', Icons.photo_library, () => Navigator.of(context).pushNamed(NovostiScreen.routeName), deviceSize),
+                  userData.role.toLowerCase() == 'svecenik'
+                  ? _wSelectItems('Obredi zahtjevi', Icons.date_range, () => Navigator.of(context).pushNamed(ObredZahtjeviScreen.routeName), deviceSize)
+                  : _wSelectItems('Zakaži obred', Icons.date_range, () => Navigator.of(context).pushNamed(ZakaziObredScreen.routeName), deviceSize)
+                  ,_wSelectItems('Novosti', Icons.photo_library, () => Navigator.of(context).pushNamed(NovostiScreen.routeName), deviceSize),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _wSelectItems('Korisni kontakti', Icons.contact_mail, null, deviceSize),
-                  _wSelectItems('Doniraj', Icons.attach_money, null, deviceSize),
+                  _wSelectItems('Doniraj', Icons.attach_money, () => Navigator.of(context).pushNamed(DonirajScreen.routeName), deviceSize),
                 ],
               ),
             ],

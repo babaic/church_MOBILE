@@ -3,8 +3,11 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/providers/obavijesti.dart';
+import 'package:saborna_crkva/providers/obredi.dart';
 import 'package:saborna_crkva/screens/auth_screen.dart';
 import 'package:saborna_crkva/screens/conversations_screen.dart';
+import 'package:saborna_crkva/screens/donacije_screen.dart';
+import 'package:saborna_crkva/screens/doniraj_screen.dart';
 import 'package:saborna_crkva/screens/home_screen.dart';
 import 'package:saborna_crkva/screens/loading_screen.dart';
 import 'package:saborna_crkva/screens/novosti_details_screen.dart';
@@ -13,10 +16,14 @@ import 'package:saborna_crkva/screens/obavijesti_details_screen.dart';
 import 'package:saborna_crkva/screens/obavjestenja_screen.dart';
 import 'package:saborna_crkva/screens/pitajsvecenika_screen.dart';
 import 'package:saborna_crkva/screens/svecenikporuka_screen.dart';
+import 'package:saborna_crkva/screens/zakazi_obred_screen.dart';
 
+import 'providers/donacije.dart';
 import 'providers/novosti.dart';
 import 'providers/poruke.dart';
 import 'providers/svecenik.dart';
+import 'screens/obred_konverzacija.dart';
+import 'screens/obred_zahtjevi_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -44,6 +51,8 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (context) => Poruke()),
           ChangeNotifierProvider(create: (context) => Novosti()),
           ChangeNotifierProvider(create: (context) => Obavijesti()),
+          ChangeNotifierProvider(create: (context) => Donacije()),
+          ChangeNotifierProvider(create: (context) => Obredi()),
         ],
         child: Consumer<Auth>(
           builder: (ctx, auth, _) => MaterialApp(
@@ -70,8 +79,12 @@ class _MyAppState extends State<MyApp> {
               NovostiScreen.routeName: (ctx) => NovostiScreen(),
               NovostiDetailsScreen.routeName: (ctx) => NovostiDetailsScreen(),
               ObavjestenjaScreen.routeName: (ctx) => ObavjestenjaScreen(),
-              ObavijestiDetailsScreen.routeName: (ctx) =>
-                  ObavijestiDetailsScreen()
+              ObavijestiDetailsScreen.routeName: (ctx) => ObavijestiDetailsScreen(),
+              DonirajScreen.routeName: (ctx) => DonirajScreen(),
+              DonacijeScreen.routeName: (ctx) => DonacijeScreen(),
+              ZakaziObredScreen.routeName: (ctx) => ZakaziObredScreen(),
+              ObredKonverzacijaScreen.routeName: (ctx) => ObredKonverzacijaScreen(),
+              ObredZahtjeviScreen.routeName: (ctx) => ObredZahtjeviScreen(),
             },
           ),
         ));

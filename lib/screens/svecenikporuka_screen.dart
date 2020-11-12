@@ -125,7 +125,7 @@ class _SvecenikPorukaScreenState extends State<SvecenikPorukaScreen> {
                               ));
                     },
                   )),
-                  NewMessage(user.id.toString(), user.username, documentId, primaocId),
+                  NewMessage(collectionName: 'chats', senderId: user.id.toString(), sender: user.username, documentId: documentId, primaocId: primaocId, primaocListId: null),
                 ],
               );
             }));

@@ -5,13 +5,17 @@ import 'package:provider/provider.dart';
 import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/providers/poruke.dart';
 
+import '../notifikacije.dart';
+
 class NewMessage extends StatefulWidget {
   final String senderId;
   final String sender;
   final String documentId;
   final String primaocId;
+  final List<String> primaocListId;
+  final String collectionName;
 
-  NewMessage(this.senderId, this.sender, this.documentId, this.primaocId);
+  NewMessage({this.collectionName, this.senderId, this.sender, this.documentId, this.primaocId, this.primaocListId});
 
   @override
   _NewMessageState createState() => _NewMessageState();
@@ -23,6 +27,7 @@ class _NewMessageState extends State<NewMessage> {
 
   Future<void> _sendMessage() async {
     var documentId = widget.documentId;
+    var collectionName = widget.collectionName;
 
     if (widget.senderId == null) {
       print('senderId is empty');
@@ -35,7 +40,7 @@ class _NewMessageState extends State<NewMessage> {
     }
     FocusScope.of(context).unfocus();
 
-    Firestore.instance.collection('/chats/$documentId/messages').add({
+    Firestore.instance.collection('/$collectionName/$documentId/messages').add({
       'text': _enteredMessage,
       'createdAt': Timestamp.now(),
       'senderId': widget.senderId,
@@ -43,14 +48,22 @@ class _NewMessageState extends State<NewMessage> {
     });
 
     //test try to update document -- add last message
-    var docRef = Firestore.instance.collection("chats").document(documentId);
+    var docRef = Firestore.instance.collection("$collectionName").document(documentId);
     docRef
         .updateData({'lastMessage': _enteredMessage, 'sender': widget.sender});
     //end test
     _controller.clear();
 
     //SEND NOTIFICATION VIA ONESIGNAL
-    _handleSendNotification(userId: widget.primaocId, content: _enteredMessage);
+    if(widget.primaocId != null) {
+      print('send to one');
+      Notifikacije.sendNotificationForOneUser(userId: widget.primaocId, content: _enteredMessage);
+    }
+    else {
+      print('sent to many');
+      Notifikacije.sendNotificationForManyUsers(userId: widget.primaocListId, content: _enteredMessage);
+    }
+    
   }
 
   void _handleSendNotification({String content, String userId}) async {

@@ -22,7 +22,6 @@ class Svecenik with ChangeNotifier {
     List<SvecenikModel> sveceniciToAdd = new List<SvecenikModel>();
 
     extractData.forEach((svecenik) {
-      print(svecenik);
       sveceniciToAdd.add(SvecenikModel(
         id: svecenik['id'],
         ime: svecenik['ime'],
