@@ -75,6 +75,9 @@ class _ObredKonverzacijaScreenState extends State<ObredKonverzacijaScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Konverzacija'),
+        actions: [
+          FlatButton.icon(onPressed: (){}, icon: Icon(Icons.lock), label: Text('Završi'), textColor: Colors.white,)
+        ],
       ),
       body: FutureBuilder(
         future: Firestore.instance
@@ -125,7 +128,7 @@ class _ObredKonverzacijaScreenState extends State<ObredKonverzacijaScreen> {
                   },
                 ),
               ),
-              NewMessage(collectionName: 'obredi', senderId: user.id.toString(), sender: user.username, documentId: documentId, primaocId: null, primaocListId: userids),
+              NewMessage(collectionName: 'obredi', senderId: user.id.toString(), sender: user.username, documentId: documentId, primaocId: null, primaocListId: userids, obredId: args,),
             ],
           );
         }

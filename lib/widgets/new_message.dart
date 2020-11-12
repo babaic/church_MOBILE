@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:saborna_crkva/providers/auth.dart';
+import 'package:saborna_crkva/providers/obredi.dart';
 import 'package:saborna_crkva/providers/poruke.dart';
+import 'package:saborna_crkva/providers/svecenik.dart';
 
 import '../notifikacije.dart';
 
@@ -14,8 +16,9 @@ class NewMessage extends StatefulWidget {
   final String primaocId;
   final List<String> primaocListId;
   final String collectionName;
+  final int obredId;
 
-  NewMessage({this.collectionName, this.senderId, this.sender, this.documentId, this.primaocId, this.primaocListId});
+  NewMessage({this.collectionName, this.senderId, this.sender, this.documentId, this.primaocId, this.primaocListId, this.obredId});
 
   @override
   _NewMessageState createState() => _NewMessageState();
@@ -60,8 +63,19 @@ class _NewMessageState extends State<NewMessage> {
       Notifikacije.sendNotificationForOneUser(userId: widget.primaocId, content: _enteredMessage);
     }
     else {
-      print('sent to many');
-      Notifikacije.sendNotificationForManyUsers(userId: widget.primaocListId, content: _enteredMessage);
+      //Notifikacije.sendNotificationForManyUsers(userId: widget.primaocListId, content: _enteredMessage);
+      var svecenici = Provider.of<Svecenik>(context, listen: false).svecenici;
+
+      for(var i = 0; i < svecenici.length; i++) {
+        if(svecenici[i].id.toString() == widget.senderId) {
+          //SVECENIK JE NAPISAO PORUKU PROMIJENI STATUS U ODGOVORENO
+          await Provider.of<Obredi>(context, listen: false).updateStatus(widget.obredId, 'Odgovoreno');
+          return;
+        }
+      }
+      //KORISNIK JE NAPISAO PORUKU PROMIJENI STATUS U NIJE ODGOVORENO
+      await Provider.of<Obredi>(context, listen: false).updateStatus(widget.obredId, 'Nije odgovoreno');
+    
     }
     
   }

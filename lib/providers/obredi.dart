@@ -17,8 +17,9 @@ class Obred {
   final String naziv;
   final String imePrezime;
   final String datum;
+  String status;
 
-  Obred({this.id, this.naziv, this.imePrezime, this.datum});
+  Obred({this.id, this.naziv, this.imePrezime, this.datum, this.status});
 }
 
 class Obredi with ChangeNotifier {
@@ -65,6 +66,7 @@ class Obredi with ChangeNotifier {
   }
 
   Future<void> getObredi(int userid) async {
+    print('getObredi');
     var url = GlobalVar.apiUrl+'obredi/getobredi';
     if(userid != null) {
       url+='?userid=$userid';
@@ -81,12 +83,27 @@ class Obredi with ChangeNotifier {
         id: obred['id'],
         naziv: obred['kategorija'],
         imePrezime: obred['imePrezime'],
-        datum: obred['datum']
+        datum: obred['datum'],
+        status: obred['status']
       ));
     });
     _obredi = obrediToAdd;
     notifyListeners();
+  }
 
+  Future<void> updateStatus(int obredId, String status) async {
+    final obredIndex = _obredi.indexWhere((obred) => obred.id == obredId);
+    var url = GlobalVar.apiUrl+'obredi/updatestatus/$obredId';
+    Map<String, String> headers = {
+      'Content-Type': 'application/json;charset=UTF-8',
+      'Charset': 'utf-8'
+    };
+    var response = http.put(url, headers: headers, body: json.encode({
+      'status': status
+    }));
+    _obredi[obredIndex].status = status;
+
+    notifyListeners();
   }
 
 }

@@ -13,6 +13,7 @@ class ObredZahtjeviScreen extends StatelessWidget {
       {String naziv,
       String imePrezime,
       String datum,
+      String status,
       int id,
       BuildContext context}) {
     return Material(
@@ -71,16 +72,13 @@ class ObredZahtjeviScreen extends StatelessWidget {
                     )
                   ],
                 ),
-                // Spacer(),
-                // Column(
-                //   children: [
-                //     Icon(
-                //       Icons.check_circle,
-                //       color: Colors.green,
-                //     ),
-                //     Text('Odgovoreno')
-                //   ],
-                // )
+                Spacer(),
+                Column(
+                  children: [
+                    status == 'Odgovoreno' ? Icon(Icons.check_circle,color: Colors.green) : Icon(Icons.remove_circle ,color: Colors.red),
+                    Text(status)
+                  ],
+                )
               ],
             ),
           ),
@@ -91,6 +89,7 @@ class ObredZahtjeviScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('rebuild called obred_zahtjevi_screen');
     var args = ModalRoute.of(context).settings.arguments as int;
     return Scaffold(
         appBar: AppBar(
@@ -109,15 +108,24 @@ class ObredZahtjeviScreen extends StatelessWidget {
                           Theme.of(context).primaryColorDark)),
                 );
               }
-              var obredi = Provider.of<Obredi>(context, listen: false).obredi;
-              return ListView.builder(
-                  itemCount: obredi.length,
+              else {
+              return Consumer<Obredi>(
+                builder: (ctx, obredData, _) {
+                  return ListView.builder(
+                  itemCount: obredData.obredi.length,
                   itemBuilder: (ctx, index) => w_ZahtjevCard(
-                      naziv: obredi[index].naziv,
-                      imePrezime: obredi[index].imePrezime,
-                      datum: obredi[index].datum,
-                      id: obredi[index].id,
-                      context: context));
-            }));
+                      naziv: obredData.obredi[index].naziv,
+                      imePrezime: obredData.obredi[index].imePrezime,
+                      datum: obredData.obredi[index].datum,
+                      status: obredData.obredi[index].status == null ? 'N/A' : obredData.obredi[index].status,
+                      id: obredData.obredi[index].id,
+                      context: context)
+                    );
+                }
+              );
+              }
+            }
+          )
+        );
   }
 }
