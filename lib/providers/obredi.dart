@@ -65,17 +65,21 @@ class Obredi with ChangeNotifier {
 
   }
 
-  Future<void> getObredi(int userid) async {
+  Future<void> getObredi(int userid, String status) async {
     print('getObredi');
     var url = GlobalVar.apiUrl+'obredi/getobredi';
+
+    Map<String, String> queryParams = {};
     if(userid != null) {
-      url+='?userid=$userid';
+      queryParams['userid'] = userid.toString();
     }
-    Map<String, String> headers = {
-      'Content-Type': 'application/json;charset=UTF-8',
-      'Charset': 'utf-8'
-    };
-    var response = await http.get(url, headers: headers);
+    if(status != null && status != 'Svi') {
+      queryParams['status'] = status;
+    }
+    
+    var uri = new Uri.http(GlobalVar.apiUri, "/api/obredi/getobredi", queryParams);
+    print(uri);
+    var response = await http.get(uri, headers: GlobalVar.headers);
     var extractedResult = json.decode(response.body) as List<dynamic>;
     List<Obred> obrediToAdd = new List<Obred>();
     extractedResult.forEach((obred) {
@@ -89,7 +93,8 @@ class Obredi with ChangeNotifier {
     });
     _obredi = obrediToAdd;
     notifyListeners();
-  }
+}
+
 
   Future<void> updateStatus(int obredId, String status) async {
     final obredIndex = _obredi.indexWhere((obred) => obred.id == obredId);

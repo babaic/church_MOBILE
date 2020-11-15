@@ -6,23 +6,29 @@ import 'package:saborna_crkva/providers/obredi.dart';
 
 import 'obred_konverzacija.dart';
 
-class ObredZahtjeviScreen extends StatelessWidget {
+class ObredZahtjeviScreen extends StatefulWidget {
   static const routeName = '/obredi-zahtjevi';
 
+  @override
+  _ObredZahtjeviScreenState createState() => _ObredZahtjeviScreenState();
+}
+
+class _ObredZahtjeviScreenState extends State<ObredZahtjeviScreen> {
+
+  List<Status> statusi = [Status('Svi', true), Status('Nije odgovoreno', false), Status('Odgovoreno', false), Status('Zavrseno', false)];
+  var selectedStatus = 'Svi';
   Widget w_IconToDisplay(String status) {
-    if(status == 'Odgovoreno') {
-      return Icon(Icons.check_circle,color: Colors.green);
-    }
-    else if(status == 'Nije odgovoreno') {
-      return Icon(Icons.remove_circle ,color: Colors.red);
-    }
-    else if(status == 'Zavrseno') {
+    if (status == 'Odgovoreno') {
+      return Icon(Icons.check_circle, color: Colors.green);
+    } else if (status == 'Nije odgovoreno') {
+      return Icon(Icons.highlight_off, color: Colors.red);
+    } else if (status == 'Zavrseno') {
       return Icon(Icons.lock);
-    }
-    else {
+    } else {
       return Icon(Icons.error);
     }
   }
+
   Widget w_ZahtjevCard(
       {String naziv,
       String imePrezime,
@@ -110,11 +116,32 @@ class ObredZahtjeviScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text('Obredi zahtjevi'),
           actions: [
-    
+            //FlatButton.icon(onPressed: () {}, icon: Icon(Icons.swap_vert), label: Text('Filter'), textColor: Colors.white,)
+            PopupMenuButton<String>(
+        icon: Icon(Icons.swap_vert),
+        itemBuilder: (ctx) => statusi
+            .map((status) => CheckedPopupMenuItem(
+                  value: status.name,
+                  child: Text(status.name),
+                  checked: status.isSelected,
+                ))
+            .toList(),
+        onSelected: (value) {
+          print(value);
+          setState(() {
+            selectedStatus = value;
+            var oldStatus = statusi.firstWhere((status) => status.isSelected);
+            oldStatus.isSelected = false;
+            var newStatus = statusi.firstWhere((status) => status.name == value);
+            newStatus.isSelected = true;
+          });
+          //obavijest.changeSelectedCategory(value);
+        },
+      )
           ],
         ),
         body: FutureBuilder(
-            future: Provider.of<Obredi>(context, listen: false).getObredi(args),
+            future: Provider.of<Obredi>(context, listen: false).getObredi(args, selectedStatus),
             builder: (ctx, futureSnapshot) {
               if (futureSnapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -122,25 +149,27 @@ class ObredZahtjeviScreen extends StatelessWidget {
                       valueColor: new AlwaysStoppedAnimation<Color>(
                           Theme.of(context).primaryColorDark)),
                 );
-              }
-              else {
-              return Consumer<Obredi>(
-                builder: (ctx, obredData, _) {
+              } else {
+                return Consumer<Obredi>(builder: (ctx, obredData, _) {
                   return ListView.builder(
-                  itemCount: obredData.obredi.length,
-                  itemBuilder: (ctx, index) => w_ZahtjevCard(
-                      naziv: obredData.obredi[index].naziv,
-                      imePrezime: obredData.obredi[index].imePrezime,
-                      datum: obredData.obredi[index].datum,
-                      status: obredData.obredi[index].status == null ? 'N/A' : obredData.obredi[index].status,
-                      id: obredData.obredi[index].id,
-                      context: context)
-                    );
-                }
-              );
+                      itemCount: obredData.obredi.length,
+                      itemBuilder: (ctx, index) => w_ZahtjevCard(
+                          naziv: obredData.obredi[index].naziv,
+                          imePrezime: obredData.obredi[index].imePrezime,
+                          datum: obredData.obredi[index].datum,
+                          status: obredData.obredi[index].status == null
+                              ? 'N/A'
+                              : obredData.obredi[index].status,
+                          id: obredData.obredi[index].id,
+                          context: context));
+                });
               }
-            }
-          )
-        );
+            }));
   }
+}
+
+class Status {
+  final String name;
+  bool isSelected;
+  Status(this.name, this.isSelected);
 }

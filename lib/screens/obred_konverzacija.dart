@@ -72,6 +72,7 @@ class _ObredKonverzacijaScreenState extends State<ObredKonverzacijaScreen> {
     print('obred konverzacija build');
     final user = Provider.of<Auth>(context, listen: false).user;
     var args = ModalRoute.of(context).settings.arguments as int;
+    var isZavrseno = Provider.of<Obredi>(context, listen: false).isZavrsen(args);
     return Scaffold(
       appBar: AppBar(
         title: Text('Konverzacija'),
@@ -81,7 +82,7 @@ class _ObredKonverzacijaScreenState extends State<ObredKonverzacijaScreen> {
             setState(() {
               Provider.of<Obredi>(context, listen: false).updateStatus(args, 'Zavrseno');
             });
-          }, icon: Icon(Icons.lock), label: Text('Završi'), textColor: Colors.white,)
+          }, icon: Icon(isZavrseno ? Icons.lock : Icons.lock_open), label: Text( isZavrseno ? 'Završeno' : 'Završi'), textColor: Colors.white,)
         ],
       ),
       body: FutureBuilder(
@@ -133,7 +134,7 @@ class _ObredKonverzacijaScreenState extends State<ObredKonverzacijaScreen> {
                   },
                 ),
               ),
-              Provider.of<Obredi>(context, listen: false).isZavrsen(args) ? Center(child: Container(height: 30, child: Text('Konverzacija je završena.')),) : NewMessage(collectionName: 'obredi', senderId: user.id.toString(), sender: user.username, documentId: documentId, primaocId: null, primaocListId: userids, obredId: args,),
+              isZavrseno ? Center(child: Container(height: 30, child: Text('Konverzacija je završena.')),) : NewMessage(collectionName: 'obredi', senderId: user.id.toString(), sender: user.username, documentId: documentId, primaocId: null, primaocListId: userids, obredId: args,),
             ],
           );
         }
