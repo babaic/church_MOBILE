@@ -63,7 +63,7 @@ class _NewMessageState extends State<NewMessage> {
       Notifikacije.sendNotificationForOneUser(userId: widget.primaocId, content: _enteredMessage);
     }
     else {
-      //Notifikacije.sendNotificationForManyUsers(userId: widget.primaocListId, content: _enteredMessage);
+      Notifikacije.sendNotificationForManyUsers(userId: widget.primaocListId, content: _enteredMessage);
       var svecenici = Provider.of<Svecenik>(context, listen: false).svecenici;
 
       for(var i = 0; i < svecenici.length; i++) {

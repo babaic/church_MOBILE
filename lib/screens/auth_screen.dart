@@ -11,7 +11,12 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
-  Map<String, String> _authData = {'Email': '', 'Password': ''};
+  Map<String, String> _authData = {
+    'Email': '',
+    'Password': '',
+    'Ime': '',
+    'Prezime': ''
+  };
   AuthMode _authMode = AuthMode.Login;
   final _passwordController = TextEditingController();
 
@@ -24,14 +29,20 @@ class _AuthScreenState extends State<AuthScreen> {
     _formKey.currentState.save();
 
     if (authMode == AuthMode.Signup) {
-      await authProvider.register(_authData['Email'], _authData['Password']);
+      try {
+        await authProvider.register(_authData['Email'], _authData['Password'],
+          _authData['ime'], _authData['prezime']);
+      }
+      catch(error) {
+        _showErrorDialog(error);
+      }
+      
     }
 
     if (authMode == AuthMode.Login) {
       try {
         await authProvider.login(_authData['Email'], _authData['Password']);
-      }
-      catch(error) {
+      } catch (error) {
         _showErrorDialog(error);
       }
     }
@@ -41,17 +52,17 @@ class _AuthScreenState extends State<AuthScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-            title: Text('Greška!'),
-            content: Text(message),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(ctx).pop();
-                },
-              )
-            ],
-          ),
+        title: Text('Greška!'),
+        content: Text(message),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          )
+        ],
+      ),
     );
   }
 
@@ -76,8 +87,8 @@ class _AuthScreenState extends State<AuthScreen> {
               children: [
                 Container(
                     alignment: Alignment.bottomRight,
-                    height: 150,
-                    width: 150,
+                    height: _authMode == AuthMode.Signup ? 100 : 150,
+                    width: _authMode == AuthMode.Signup ? 100 : 150,
                     child: Image.asset(
                       'assets/images/crkva.png',
                       fit: BoxFit.cover,
@@ -125,6 +136,26 @@ class _AuthScreenState extends State<AuthScreen> {
                               _authData['Email'] = value;
                             },
                           ),
+                          if (_authMode == AuthMode.Signup)
+                            TextFormField(
+                              decoration: InputDecoration(labelText: 'Ime'),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Unesite Vaše ime';
+                                }
+                              },
+                              onSaved: (value) => _authData['ime'] = value,
+                            ),
+                          if (_authMode == AuthMode.Signup)
+                            TextFormField(
+                              decoration: InputDecoration(labelText: 'Prezime'),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Unesite Vaše prezime';
+                                }
+                              },
+                              onSaved: (value) => _authData['prezime'] = value,
+                            ),
                           TextFormField(
                             controller: _passwordController,
                             decoration: InputDecoration(labelText: 'Lozinka'),
@@ -141,8 +172,8 @@ class _AuthScreenState extends State<AuthScreen> {
                           if (_authMode == AuthMode.Signup)
                             TextFormField(
                               enabled: _authMode == AuthMode.Signup,
-                              decoration: InputDecoration(
-                                  labelText: 'Potvrdi lozinku'),
+                              decoration:
+                                  InputDecoration(labelText: 'Potvrdi lozinku'),
                               obscureText: true,
                               validator: _authMode == AuthMode.Signup
                                   ? (value) {
@@ -185,10 +216,11 @@ class _AuthScreenState extends State<AuthScreen> {
                       },
                     ),
                     padding: EdgeInsets.only(top: 40),
-                  )
+                  ),
                 ],
               ),
             ),
+            Positioned(child: Text('❥ FIT Mostar', style: TextStyle(color: Colors.black, fontSize: 10),), bottom: 10,)
           ],
         ),
       ),

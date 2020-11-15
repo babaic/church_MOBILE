@@ -69,7 +69,7 @@ class _ObredZahtjeviScreenState extends State<ObredZahtjeviScreen> {
                               style: TextStyle(fontWeight: FontWeight.bold),
                             )),
                         Text(
-                          imePrezime,
+                          imePrezime != null ? imePrezime : 'Nepoznat korisnik',
                           style: TextStyle(letterSpacing: 2),
                         )
                       ],
@@ -151,6 +151,18 @@ class _ObredZahtjeviScreenState extends State<ObredZahtjeviScreen> {
                 );
               } else {
                 return Consumer<Obredi>(builder: (ctx, obredData, _) {
+                  if(obredData.obredi.length == 0) {
+                    return Container(
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.network('https://img.icons8.com/cute-clipart/64/000000/search.png'),
+                          Text('Nemate zahtjeva')
+                        ],),
+                    );
+                  } 
                   return ListView.builder(
                       itemCount: obredData.obredi.length,
                       itemBuilder: (ctx, index) => w_ZahtjevCard(

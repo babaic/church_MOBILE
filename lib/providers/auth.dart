@@ -15,7 +15,7 @@ class Auth with ChangeNotifier {
   String _role;
 
   User _user;
-  
+
   bool get isAuth {
     return _token != null;
   }
@@ -39,74 +39,72 @@ class Auth with ChangeNotifier {
   }
 
   Future<bool> tryAutoLogin() async {
-    print('autologin');
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(!prefs.containsKey('userData')) {
-      _token = null;
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('userData')) {
       return false;
     }
-    final extractedData = json.decode(prefs.getString('userData')) as Map<String, Object>;
-    _token = extractedData['token'];
-    
+    final extractedUserData = json.decode(prefs.getString('userData')) as Map<String, Object>;
+    _token = extractedUserData['token'];
+    _userId = extractedUserData['userId'];
     await setUserData();
-    
     notifyListeners();
-    
     return true;
   }
 
+  Future<void> _authenticate(
+      {String email,
+      String password,
+      String ime,
+      String prezime,
+      String urlSegment}) async {
+    final url = GlobalVar.apiUrl + 'auth/$urlSegment';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  Future<void> register(String email, String password) async {
-    final url = GlobalVar.apiUrl+'auth/register';
-    final response = await http.post(url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: json.encode({'email': email, 'password': password}));
-    print(response.body);
+    if (urlSegment == 'login') {
+      final response = await http.post(url,
+          headers: GlobalVar.headers,
+          body: json.encode({'email': email, 'password': password}));
+      if (response.statusCode == 401) {
+        throw ('Pogrešno korisničko ime ili lozinka');
+      }
+      final data = json.decode(response.body) as Map<String, dynamic>;
+      final userData = json.encode({
+        'userId': data['id'],
+        'username': data['username'],
+        'role': data['role'],
+        'token': data['token'],
+      });
+      await prefs.setString('userData', userData);
+      await setUserData();
+      _handleGetPermissionSubscriptionState();
+    }
+    else {
+      final response = await http.post(url,
+        headers: GlobalVar.headers,
+        body: json.encode({'email': email, 'password': password, 'ime': ime, 'prezime': prezime}));
+      if(response.statusCode != 200) {
+        throw(response.body);
+      }
+      await login(email, password);
+      //await prefs.setString('userData', userData);
+      //await setUserData();
+    }
+    notifyListeners();
   }
 
   Future<void> login(String email, String password) async {
-    print('login');
-    final url = GlobalVar.apiUrl+'auth/login';
-    Map<String, String> headers = {
-    'Content-Type': 'application/json;charset=UTF-8',
-    'Charset': 'utf-8'
-    };
-    final response = await http.post(url,
-        headers: headers,
-        body: json.encode({'email': email, 'password': password}));
-
-    print(response.statusCode);
-    if(response.statusCode == 401) {
-      throw ('Pogrešno korisničko ime ili lozinka');
-    }
-    
-    final data = json.decode(response.body) as Map<String, dynamic>;
-    //print(data);
-
-    final userData = json.encode({
-      'userId': data['id'],
-      'username': data['username'],
-      'role': data['role'],
-      'token': data['token'],
-    });
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userData', userData);
-
-    await setUserData();
-    _handleGetPermissionSubscriptionState();
-    notifyListeners();
+    await _authenticate(email: email, password: password, urlSegment: 'login');
+  }
+  Future<void> register(String email, String password, String ime, String prezime) async {
+    await _authenticate(email: email, password: password, ime: ime, prezime: prezime, urlSegment: 'register');
   }
 
   Future<void> logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('userData');
     _token = null;
-
+    _userId = null;
     deleteDeviceFromFirestore();
-
     notifyListeners();
   }
 
@@ -114,28 +112,34 @@ class Auth with ChangeNotifier {
     print("Getting permissionSubscriptionState");
     OneSignal.shared.getPermissionSubscriptionState().then((status) {
       //print(status.subscriptionStatus.userId);
-      
-      var docRef = Firestore.instance.collection('notifications').document(_user.id.toString());
+
+      var docRef = Firestore.instance
+          .collection('notifications')
+          .document(_user.id.toString());
 
       Firestore.instance.runTransaction((transaction) async {
         await transaction.set(docRef, {});
       });
 
       var docId = docRef.documentID;
-      Firestore.instance.collection('/notifications/$docId/device').add({'deviceId': status.subscriptionStatus.userId});
-
+      Firestore.instance
+          .collection('/notifications/$docId/device')
+          .add({'deviceId': status.subscriptionStatus.userId});
     });
   }
 
   void deleteDeviceFromFirestore() {
     var userId = _user.id;
     OneSignal.shared.getPermissionSubscriptionState().then((status) {
-      Firestore.instance.collection('/notifications/$userId/device').where('deviceId', isEqualTo: status.subscriptionStatus.userId).getDocuments().then((value) {
+      Firestore.instance
+          .collection('/notifications/$userId/device')
+          .where('deviceId', isEqualTo: status.subscriptionStatus.userId)
+          .getDocuments()
+          .then((value) {
         value.documents.forEach((element) {
           element.reference.delete();
         });
       });
     });
   }
-  
 }
