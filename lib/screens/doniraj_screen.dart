@@ -136,8 +136,8 @@ class IznosPorukaPage extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
-                child: Image.network(
-                    'https://img.icons8.com/officel/80/000000/donate.png'),
+                child: Image.asset(
+                    'assets/images/donate.png'),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
@@ -226,8 +226,8 @@ class KarticaPage extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
-                child: Image.network(
-                    'https://img.icons8.com/cute-clipart/64/000000/bank-card-back-side.png'),
+                child: Image.asset(
+                    'assets/images/bankcard.png'),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
@@ -323,7 +323,7 @@ class SuccessPage extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.network('https://img.icons8.com/bubbles/200/000000/checkmark.png'),
+          Image.asset('assets/images/checkmark.png'),
           Text('Hvala Vam na donaciji', style: TextStyle(fontWeight: FontWeight.bold),),
         ],
     );

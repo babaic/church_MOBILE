@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
+import 'globalVar.dart';
+
 class Notifikacije {
   static void sendNotificationForOneUser({String content, String userId}) async {
     List<String> devicesId = [];
@@ -16,6 +18,8 @@ class Notifikacije {
           playerIds: devicesId,
           content: content,
           heading: "Imate novu poruku",
+          androidLargeIcon: GlobalVar.notificationImg,
+          androidChannelId: 'd08c08c7-bd86-429d-9bb3-2953f1592731',
         );
 
         var response = await OneSignal.shared.postNotification(notification);
@@ -39,6 +43,8 @@ class Notifikacije {
           playerIds: devicesId,
           content: content,
           heading: "Imate novu poruku za obred",
+          androidLargeIcon: GlobalVar.notificationImg,
+          androidChannelId: 'd08c08c7-bd86-429d-9bb3-2953f1592731',
         );
 
         var response = await OneSignal.shared.postNotification(notification);

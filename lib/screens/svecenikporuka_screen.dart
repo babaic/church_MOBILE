@@ -112,6 +112,7 @@ class _SvecenikPorukaScreenState extends State<SvecenikPorukaScreen> {
                         return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColorDark)));
                       }
                       final documents = streamSnapshot.data.documents;
+                      
                       return ListView.builder(
                           reverse: true,
                           itemCount: documents.length,

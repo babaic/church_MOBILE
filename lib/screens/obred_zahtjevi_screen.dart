@@ -158,7 +158,7 @@ class _ObredZahtjeviScreenState extends State<ObredZahtjeviScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.network('https://img.icons8.com/cute-clipart/64/000000/search.png'),
+                          Image.asset('assets/images/search.png'),
                           Text('Nemate zahtjeva')
                         ],),
                     );

@@ -5,4 +5,7 @@ class GlobalVar {
       'Content-Type': 'application/json;charset=UTF-8',
       'Charset': 'utf-8'
     };
+
+  //image urls
+  static const notificationImg = 'https://i.imgur.com/HjZLnil.png';
 }

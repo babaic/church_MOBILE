@@ -46,7 +46,7 @@ class Obavijesti with ChangeNotifier {
     };
 
     var result = await http.get(url, headers: headers);
-    var extractData = json.decode(result.body);
+    var extractData = json.decode(result.body) as Map<String, dynamic>;
 
     List<Obavijest> obavijestiToAdd = new List<Obavijest>();
 
@@ -67,6 +67,7 @@ class Obavijesti with ChangeNotifier {
 
 
     _obavijesti = _obavijesti + obavijestiToAdd;
+
     notifyListeners();
   }
   
@@ -102,6 +103,7 @@ class Obavijesti with ChangeNotifier {
     for(var i = 0; i < extractData.length; i++) {
       _kategorije.add(Kategorija(extractData[i]['obavjestenjaKategorijeID'], extractData[i]['naziv']));
     }
+    _kategorije.insert(0, Kategorija(0, 'Prikazi sve'));
     changeSelectedCategory(id);
   }
 

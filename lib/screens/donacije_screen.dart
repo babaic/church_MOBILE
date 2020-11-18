@@ -31,8 +31,8 @@ class DonacijeScreen extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.network(
-            'https://img.icons8.com/cute-clipart/128/000000/refund.png'),
+        Image.asset(
+            'assets/images/emptydonations.png'),
         Text(
           'Nemate donacija',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),

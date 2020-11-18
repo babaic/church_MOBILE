@@ -33,7 +33,7 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
   void initState() {
     super.initState();
     print('initState ObavjestenjaScreen');
-    categoryId = 1;
+    categoryId = 0;
     pageNumber = 1;
 
     _scrollController.addListener(() async {
@@ -72,7 +72,6 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
                 ))
             .toList(),
         onSelected: (value) {
-          print(value);
           setState(() {
             categoryId = value;
             pageNumber = 1;

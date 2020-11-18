@@ -60,7 +60,7 @@ class _NewMessageState extends State<NewMessage> {
     //SEND NOTIFICATION VIA ONESIGNAL
     if(widget.primaocId != null) {
       print('send to one');
-      Notifikacije.sendNotificationForOneUser(userId: widget.primaocId, content: _enteredMessage);
+      //Notifikacije.sendNotificationForOneUser(userId: widget.primaocId, content: _enteredMessage);
     }
     else {
       Notifikacije.sendNotificationForManyUsers(userId: widget.primaocListId, content: _enteredMessage);
