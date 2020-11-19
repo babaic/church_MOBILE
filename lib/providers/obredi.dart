@@ -113,6 +113,9 @@ class Obredi with ChangeNotifier {
 
   bool isZavrsen(int obredId) {
     var obredIndex = _obredi.indexWhere((element) => element.id == obredId);
+    if(obredIndex < 1) {
+      return false;
+    }
     print(_obredi[obredIndex].status == 'Zavrseno');
     return _obredi[obredIndex].status == 'Zavrseno';
   }

@@ -17,8 +17,9 @@ class NewMessage extends StatefulWidget {
   final List<String> primaocListId;
   final String collectionName;
   final int obredId;
+  final bool isSpam;
 
-  NewMessage({this.collectionName, this.senderId, this.sender, this.documentId, this.primaocId, this.primaocListId, this.obredId});
+  NewMessage({this.collectionName, this.senderId, this.sender, this.documentId, this.primaocId, this.primaocListId, this.obredId, this.isSpam});
 
   @override
   _NewMessageState createState() => _NewMessageState();
@@ -27,6 +28,24 @@ class NewMessage extends StatefulWidget {
 class _NewMessageState extends State<NewMessage> {
   var _enteredMessage = '';
   final _controller = TextEditingController();
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Greška!'),
+        content: Text(message),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          )
+        ],
+      ),
+    );
+  }
 
   Future<void> _sendMessage() async {
     var documentId = widget.documentId;
@@ -111,8 +130,11 @@ class _NewMessageState extends State<NewMessage> {
         children: [
           Expanded(
               child: TextField(
+                //enabled: false,
             controller: _controller,
             decoration: InputDecoration(labelText: 'Napiši poruku...'),
+            onTap: ()=> widget.isSpam ? _showErrorDialog('Ne možete poslati više od 3 poruke uzastopno!') : null,
+            readOnly: widget.isSpam ? true : false,
             onChanged: (value) {
               setState(() {
                 _enteredMessage = value;

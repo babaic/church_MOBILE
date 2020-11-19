@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/providers/obredi.dart';
 
+import '../helper.dart';
 import 'obred_konverzacija.dart';
 import 'obred_zahtjevi_screen.dart';
 
@@ -51,7 +52,7 @@ class _ZakaziObredScreenState extends State<ZakaziObredScreen> {
 
   Future<void> zakaziObred() async {
     obredId = await Provider.of<Obredi>(context, listen: false).zakaziObred(Provider.of<Auth>(context, listen: false).user.id,_odabranaKategorija);
-    Navigator.of(context).popAndPushNamed(ObredKonverzacijaScreen.routeName, arguments: obredId);
+    obredId == 0 ? Helper.showErrorDialog('Napomena', 'U toku jednog dana možete poslati jedan zahtjev za obred.', context) : Navigator.of(context).popAndPushNamed(ObredKonverzacijaScreen.routeName, arguments: obredId);
   }
 
   @override

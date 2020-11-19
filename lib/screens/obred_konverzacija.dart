@@ -94,12 +94,12 @@ class _ObredKonverzacijaScreenState extends State<ObredKonverzacijaScreen> {
                   //first check if document exist
                   if (value.documents.length == 0) {
                     documentId = createDocument(args);
-                    print('document created... ' + documentId);
+                    print('creating document...');
                   } else {
                     //else document exist
                     value.documents.forEach((element) {
-                      print('document exist... ' + element.documentID);
                       documentId = element.documentID;
+                      print('document exist...');
                     });
                   }
                 }),
@@ -134,7 +134,7 @@ class _ObredKonverzacijaScreenState extends State<ObredKonverzacijaScreen> {
                   },
                 ),
               ),
-              isZavrseno ? Center(child: Container(height: 30, child: Text('Konverzacija je završena.')),) : NewMessage(collectionName: 'obredi', senderId: user.id.toString(), sender: user.username, documentId: documentId, primaocId: null, primaocListId: userids, obredId: args,),
+              isZavrseno ? Center(child: Container(height: 30, child: Text('Konverzacija je završena.')),) : NewMessage(collectionName: 'obredi', senderId: user.id.toString(), sender: user.username, documentId: documentId, primaocId: null, primaocListId: userids, obredId: args, isSpam: false,),
             ],
           );
         }

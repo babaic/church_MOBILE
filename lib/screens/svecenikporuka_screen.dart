@@ -26,18 +26,17 @@ class _SvecenikPorukaScreenState extends State<SvecenikPorukaScreen> {
 
   Map<String, String> userIds(int id1, int id2) {
     Map<String, String> sorted = new Map();
-  
-    if(id1 < id2) {
+
+    if (id1 < id2) {
       sorted["id1"] = id1.toString();
       sorted["id2"] = id2.toString();
-    }
-    else {
+    } else {
       sorted["id1"] = id2.toString();
       sorted["id2"] = id1.toString();
     }
-    
+
     return sorted;
-}
+  }
 
   String createDocument(String userkey1, String userkey2) {
     var docRef = Firestore.instance.collection('chats').document();
@@ -63,7 +62,7 @@ class _SvecenikPorukaScreenState extends State<SvecenikPorukaScreen> {
     primaocId = args['svecenikId'];
     ucesnici = args['ucesnici'];
 
-    if(primaocId == user.id.toString()) {
+    if (primaocId == user.id.toString()) {
       primaocId = ucesnici[0] == primaocId ? ucesnici[1] : ucesnici[0];
     }
 
@@ -72,7 +71,7 @@ class _SvecenikPorukaScreenState extends State<SvecenikPorukaScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Napiši poruku ' + svecenikImePrezime),
-          actions: [],
+          
         ),
         body: FutureBuilder(
             future: Firestore.instance
@@ -83,51 +82,74 @@ class _SvecenikPorukaScreenState extends State<SvecenikPorukaScreen> {
                   //first check if document exist
                   if (value.documents.length == 0) {
                     documentId = createDocument(sorted['id1'], sorted['id2']);
-                    print('document created... ' + documentId);
                   } else {
                     //else document exist
                     value.documents.forEach((element) {
-                      print('document exist... ' + element.documentID);
                       documentId = element.documentID;
+                      print(documentId);
                     });
                   }
                 }),
             builder: (ctx, futureSnapshot) {
+              bool spam = false;
               if (futureSnapshot.connectionState == ConnectionState.waiting) {
                 return Center(
-                  child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColorDark)),
+                  child: CircularProgressIndicator(
+                      valueColor: new AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColorDark)),
                 );
               }
-              return Column(
-                children: [
-                  Expanded(child: StreamBuilder(
-                    stream: Firestore.instance
-                        .collection('/chats/$documentId/messages')
-                        .orderBy('createdAt', descending: true)
-                        .snapshots(),
-                    //Firestore.instance.collection('chats').snapshots(),
-                    builder: (ctx, streamSnapshot) {
-                      if (streamSnapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColorDark)));
-                      }
-                      final documents = streamSnapshot.data.documents;
-                      
-                      return ListView.builder(
-                          reverse: true,
-                          itemCount: documents.length,
-                          itemBuilder: (ctx, index) => MessageBubble(
-                                message: documents[index]['text'],
-                                username: documents[index]['sender'],
-                                isMe: documents[index]['senderId'] ==
-                                        user.id.toString()
-                                    ? true
-                                    : false,
-                              ));
-                    },
-                  )),
-                  NewMessage(collectionName: 'chats', senderId: user.id.toString(), sender: user.username, documentId: documentId, primaocId: primaocId, primaocListId: null),
-                ],
+              return StreamBuilder(
+                stream: Firestore.instance
+                    .collection('/chats/$documentId/messages')
+                    .orderBy('createdAt', descending: true)
+                    .snapshots(),
+                //Firestore.instance.collection('chats').snapshots(),
+                builder: (ctx, streamSnapshot) {
+                  if (streamSnapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return Center(
+                        child: CircularProgressIndicator(
+                            valueColor: new AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).primaryColorDark)));
+                  }
+                  final documents = streamSnapshot.data.documents;
+
+                  if ((documents[0]['senderId'] == documents[1]['senderId'] &&
+                          documents[1]['senderId'] ==
+                              documents[2]['senderId']) &&
+                      documents[2]['senderId'] == user.id.toString()) {
+                    spam = true;
+                  } else {
+                    spam = false;
+                  }
+
+                  return Column(
+                    children: [
+                      Expanded(
+                          child: ListView.builder(
+                              reverse: true,
+                              itemCount: documents.length,
+                              itemBuilder: (ctx, index) => MessageBubble(
+                                    message: documents[index]['text'],
+                                    username: documents[index]['sender'],
+                                    isMe: documents[index]['senderId'] ==
+                                            user.id.toString()
+                                        ? true
+                                        : false,
+                                  ))),
+                      NewMessage(
+                        collectionName: 'chats',
+                        senderId: user.id.toString(),
+                        sender: user.username,
+                        documentId: documentId,
+                        primaocId: primaocId,
+                        primaocListId: null,
+                        isSpam: spam,
+                      ),
+                    ],
+                  );
+                },
               );
             }));
   }
