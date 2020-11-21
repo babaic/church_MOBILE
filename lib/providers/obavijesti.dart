@@ -2,10 +2,13 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:saborna_crkva/localization/language_constants.dart';
 import 'package:saborna_crkva/models/obavijest.dart';
 
 import '../globalVar.dart';
 import 'package:http/http.dart' as http;
+
+import '../helper.dart';
 
 class Kategorija {
   final int kategorijaId;
@@ -63,6 +66,34 @@ class Obavijesti with ChangeNotifier {
         kategorija: obavijest['kategorije'][0]['naziv'],
         kategorijaId: obavijest['kategorije'][0]['obavjestenjaKategorijeID'],
       ));
+    });
+
+    var pismo = await getLocale();
+
+    obavijestiToAdd.forEach((obavijest) {
+      String prevodNaslov = '';
+      String prevodTekst = '';
+
+      for(var slovo = 0; slovo < obavijest.naslov.length; slovo++) {
+        if(pismo.languageCode == 'sr') {
+          prevodNaslov+= Helper.convertLatinToCyrillic(obavijest.naslov[slovo]);
+        }
+        else {
+          prevodNaslov+= Helper.convertCyrillicToLatin(obavijest.naslov[slovo]);
+        }
+      }
+      obavijest.naslov = prevodNaslov;
+
+      for(var slovo = 0; slovo < obavijest.text.length; slovo++) {
+        if(pismo.languageCode == 'sr') {
+          prevodTekst+= Helper.convertLatinToCyrillic(obavijest.text[slovo]);
+        }
+        else {
+          prevodTekst+= Helper.convertCyrillicToLatin(obavijest.text[slovo]);
+        }
+      }
+      obavijest.text = prevodTekst;
+
     });
 
 

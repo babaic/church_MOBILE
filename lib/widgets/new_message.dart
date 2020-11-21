@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:saborna_crkva/localization/language_constants.dart';
 import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/providers/obredi.dart';
 import 'package:saborna_crkva/providers/poruke.dart';
@@ -132,7 +133,7 @@ class _NewMessageState extends State<NewMessage> {
               child: TextField(
                 //enabled: false,
             controller: _controller,
-            decoration: InputDecoration(labelText: 'Napiši poruku...'),
+            decoration: InputDecoration(labelText: getTranslated(context, 'lbl_napisi_poruku')),
             onTap: ()=> widget.isSpam ? _showErrorDialog('Ne možete poslati više od 3 poruke uzastopno!') : null,
             readOnly: widget.isSpam ? true : false,
             onChanged: (value) {

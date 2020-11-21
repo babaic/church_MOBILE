@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:saborna_crkva/localization/language_constants.dart';
 import 'package:saborna_crkva/providers/obredi.dart';
 
 import 'obred_konverzacija.dart';
@@ -52,7 +53,7 @@ class _ObredZahtjeviScreenState extends State<ObredZahtjeviScreen> {
                       children: [
                         Container(
                             width: 80,
-                            child: Text('Obred ',
+                            child: Text(getTranslated(context, 'obred'),
                                 style: TextStyle(fontWeight: FontWeight.bold))),
                         Text(
                           naziv,
@@ -65,7 +66,7 @@ class _ObredZahtjeviScreenState extends State<ObredZahtjeviScreen> {
                         Container(
                             width: 80,
                             child: Text(
-                              'Korisnik ',
+                              getTranslated(context, 'korisnik'),
                               style: TextStyle(fontWeight: FontWeight.bold),
                             )),
                         Text(
@@ -79,7 +80,7 @@ class _ObredZahtjeviScreenState extends State<ObredZahtjeviScreen> {
                         Container(
                             width: 80,
                             child: Text(
-                              'Datum ',
+                              getTranslated(context, 'datum'),
                               style: TextStyle(fontWeight: FontWeight.bold),
                             )),
                         Text(
@@ -114,7 +115,7 @@ class _ObredZahtjeviScreenState extends State<ObredZahtjeviScreen> {
     var args = ModalRoute.of(context).settings.arguments as int;
     return Scaffold(
         appBar: AppBar(
-          title: Text('Obredi zahtjevi'),
+          title: Text(getTranslated(context, 'obrediZahtjevi')),
           actions: [
             //FlatButton.icon(onPressed: () {}, icon: Icon(Icons.swap_vert), label: Text('Filter'), textColor: Colors.white,)
             PopupMenuButton<String>(
@@ -159,7 +160,7 @@ class _ObredZahtjeviScreenState extends State<ObredZahtjeviScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Image.asset('assets/images/search.png'),
-                          Text('Nemate zahtjeva')
+                          Text(getTranslated(context, 'nemateZahtjeva'))
                         ],),
                     );
                   } 

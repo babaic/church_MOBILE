@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:saborna_crkva/localization/language_constants.dart';
 import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/screens/svecenikporuka_screen.dart';
 
@@ -30,7 +31,7 @@ class SvecenikCard extends StatelessWidget {
             FlatButton.icon(
                 onPressed: () => userData.id.toString() == id ? Scaffold.of(context).showSnackBar(snackBar) : Navigator.of(context).pushNamed(SvecenikPorukaScreen.routeName, arguments: {'imePrezime': imePrezime, 'svecenikId': id}),
                 icon: Icon(Icons.message),
-                label: Text('Odaberi'))
+                label: Text(getTranslated(context, 'odaberi')))
           ],
         ),
       ),

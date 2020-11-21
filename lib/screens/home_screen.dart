@@ -1,19 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:saborna_crkva/localization/language.dart';
+import 'package:saborna_crkva/localization/language_constants.dart';
 import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/screens/obavjestenja_screen.dart';
 import 'package:saborna_crkva/screens/obred_zahtjevi_screen.dart';
 import 'package:saborna_crkva/screens/pitajsvecenika_screen.dart';
 import 'package:saborna_crkva/screens/zakazi_obred_screen.dart';
 
+import '../main.dart';
 import 'conversations_screen.dart';
 import 'donacije_screen.dart';
 import 'doniraj_screen.dart';
+import 'korisni_linkovi_screen.dart';
 import 'novosti_screen.dart';
 
-class HomeScreen extends StatelessWidget {
-  Widget _wSelectItems(String naslov, IconData ikona, Function funkcija, Size devSize) {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool _latinica = false;
+  void _changeLanguage(Language language) async {
+    Locale _locale = await setLocale(language.languageCode);
+    MyApp.setLocale(context, _locale);
+  }
+
+  void selectPismo(bool isLatinicaCheck) {
+    _changeLanguage(isLatinicaCheck
+        ? Language.languageList()[1]
+        : Language.languageList()[0]);
+  }
+
+  Future<bool> isLatinica() async {
+    var pismo = await getLocale();
+    return pismo.languageCode == 'bs';
+  }
+
+  Widget _wSelectItems(
+      String naslov, IconData ikona, Function funkcija, Size devSize) {
     return Material(
       color: Colors.white.withOpacity(0.0),
       child: InkWell(
@@ -51,7 +78,7 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-  
+
   void _handleSendNotification() async {
     var status = await OneSignal.shared.getPermissionSubscriptionState();
 
@@ -84,9 +111,9 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       //backgroundColor: Theme.of(context).primaryColorLight,
       appBar: AppBar(
-        title: Text('Саборна црква Moctap',
-            style:
-                TextStyle(fontFamily: 'RuslanDisplay-Regular', fontSize: 18)),
+        title: Text(getTranslated(context, 'home_naslov'),
+            style: TextStyle(fontSize: 18)),
+        //title: Text(getTranslated(context, 'about_us')),
       ),
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
@@ -97,27 +124,55 @@ class HomeScreen extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              child: Text('Dobrodošli '+ userData.username),
+              child: Text(getTranslated(context, 'home_dobrodosliImePrezime') +
+                  ' ' +
+                  userData.username),
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColorLight,
               ),
             ),
             ListTile(
               leading: Icon(Icons.message),
-              title: Text('Poruke'),
-              onTap: () => Navigator.of(context).popAndPushNamed(ConversationsScreen.routeName),
+              title: Text(getTranslated(context, 'poruke')),
+              onTap: () => Navigator.of(context)
+                  .popAndPushNamed(ConversationsScreen.routeName),
             ),
-            if (Provider.of<Auth>(context).user.role.toLowerCase() == 'blagajnik')
-            ListTile(
-              leading: Icon(Icons.attach_money),
-              title: Text('Donacije'),
-              onTap: () => Navigator.of(context).popAndPushNamed(DonacijeScreen.routeName),
-            ),
+            if (Provider.of<Auth>(context).user.role.toLowerCase() ==
+                'blagajnik')
+              ListTile(
+                leading: Icon(Icons.attach_money),
+                title: Text(getTranslated(context, 'donacije')),
+                onTap: () => Navigator.of(context)
+                    .popAndPushNamed(DonacijeScreen.routeName),
+              ),
             ListTile(
               leading: Icon(Icons.exit_to_app),
-              title: Text('Odjavi se'),
+              title: Text(getTranslated(context, 'odjavi_se')),
               onTap: () {
                 Provider.of<Auth>(context, listen: false).logout();
+              },
+            ),
+            FutureBuilder(
+              future: getLocale(),
+              builder: (ctx, AsyncSnapshot<Locale> futureSnapshot) {
+                if(futureSnapshot.connectionState == ConnectionState.waiting) {
+                  return Text('...');
+                }
+                else {
+                  bool isLatinica = futureSnapshot.data.languageCode == 'bs';
+                  return SwitchListTile(
+                    activeColor: Colors.brown,
+                    inactiveThumbColor: Colors.brown,
+                    title: Text(getTranslated(context, 'promijeni_pismo')),
+                    subtitle: !isLatinica ? Text('Ћирилица') : Text('Latinica'),
+                    value: isLatinica,
+                    onChanged: (value) {
+                      selectPismo(value);
+                      setState(() {
+                        _latinica = value;
+                      });
+                    });
+                }
               },
             ),
           ],
@@ -147,24 +202,55 @@ class HomeScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _wSelectItems('Pitaj svećenika', Icons.message, () => Navigator.of(context).pushNamed(PitajSvecenikaScreen.routeName), deviceSize),
-                  _wSelectItems('Obavijesti', Icons.notifications, () => Navigator.of(context).pushNamed(ObavjestenjaScreen.routeName), deviceSize),
+                  _wSelectItems(
+                      getTranslated(context, 'pitaj_svecenika'),
+                      Icons.message,
+                      () => Navigator.of(context)
+                          .pushNamed(PitajSvecenikaScreen.routeName),
+                      deviceSize),
+                  _wSelectItems(
+                      getTranslated(context, 'obavijesti'),
+                      Icons.notifications,
+                      () => Navigator.of(context)
+                          .pushNamed(ObavjestenjaScreen.routeName),
+                      deviceSize),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   userData.role.toLowerCase() == 'svecenik'
-                  ? _wSelectItems('Obredi zahtjevi', Icons.date_range, () => Navigator.of(context).pushNamed(ObredZahtjeviScreen.routeName), deviceSize)
-                  : _wSelectItems('Zakaži obred', Icons.date_range, () => Navigator.of(context).pushNamed(ZakaziObredScreen.routeName), deviceSize)
-                  ,_wSelectItems('Novosti', Icons.photo_library, () => Navigator.of(context).pushNamed(NovostiScreen.routeName), deviceSize),
+                      ? _wSelectItems(
+                          getTranslated(context, 'obredi_zahtjevi'),
+                          Icons.date_range,
+                          () => Navigator.of(context)
+                              .pushNamed(ObredZahtjeviScreen.routeName),
+                          deviceSize)
+                      : _wSelectItems(
+                          getTranslated(context, 'zakazi_obred'),
+                          Icons.date_range,
+                          () => Navigator.of(context)
+                              .pushNamed(ZakaziObredScreen.routeName),
+                          deviceSize),
+                  _wSelectItems(
+                      getTranslated(context, 'novosti'),
+                      Icons.photo_library,
+                      () => Navigator.of(context)
+                          .pushNamed(NovostiScreen.routeName),
+                      deviceSize),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _wSelectItems('Korisni kontakti', Icons.contact_mail, null, deviceSize),
-                  _wSelectItems('Doniraj', Icons.attach_money, () => Navigator.of(context).pushNamed(DonirajScreen.routeName), deviceSize),
+                  _wSelectItems(getTranslated(context, 'korisni_kontakti'),
+                      Icons.contact_mail, () => Navigator.of(context).pushNamed(KorisniLinkoviScreen.routeName), deviceSize),
+                  _wSelectItems(
+                      getTranslated(context, 'doniraj'),
+                      Icons.attach_money,
+                      () => Navigator.of(context)
+                          .pushNamed(DonirajScreen.routeName),
+                      deviceSize),
                 ],
               ),
             ],

@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:saborna_crkva/localization/language_constants.dart';
 import 'package:saborna_crkva/providers/novosti.dart';
 
 class NovostiDetailsScreen extends StatelessWidget {
@@ -40,7 +41,7 @@ class NovostiDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Novost'),
+        title: Text(getTranslated(context, 'novost')),
       ),
       body: Container(
         padding: EdgeInsets.all(10),
@@ -104,7 +105,7 @@ class NovostiDetailsScreen extends StatelessWidget {
                   
                   Padding(
                     padding: const EdgeInsets.only(top: 15),
-                    child: Text('Objavljeno: '+ DateFormat('dd.MM.yyyy hh:mm').format(DateTime.parse(datum)).toString(), textAlign: TextAlign.start, style: TextStyle(fontStyle: FontStyle.italic),),
+                    child: Text(getTranslated(context, 'objavljeno')+ DateFormat('dd.MM.yyyy hh:mm').format(DateTime.parse(datum)).toString(), textAlign: TextAlign.start, style: TextStyle(fontStyle: FontStyle.italic),),
                   ),
                 ],
               ),

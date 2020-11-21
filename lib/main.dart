@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:saborna_crkva/providers/auth.dart';
@@ -18,10 +19,13 @@ import 'package:saborna_crkva/screens/pitajsvecenika_screen.dart';
 import 'package:saborna_crkva/screens/svecenikporuka_screen.dart';
 import 'package:saborna_crkva/screens/zakazi_obred_screen.dart';
 
+import 'localization/demo_localization.dart';
+import 'localization/language_constants.dart';
 import 'providers/donacije.dart';
 import 'providers/novosti.dart';
 import 'providers/poruke.dart';
 import 'providers/svecenik.dart';
+import 'screens/korisni_linkovi_screen.dart';
 import 'screens/obred_konverzacija.dart';
 import 'screens/obred_zahtjevi_screen.dart';
 
@@ -31,11 +35,34 @@ void main() {
 
 class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+
+  static void setLocale(BuildContext context, Locale newLocale) {
+    _MyAppState state = context.findAncestorStateOfType<_MyAppState>();
+    state.setLocale(newLocale);
+  }
+
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
+  Locale _locale;
+  setLocale(Locale locale) {
+    setState(() {
+      _locale = locale;
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    getLocale().then((locale) {
+      setState(() {
+        this._locale = locale;
+      });
+    });
+    super.didChangeDependencies();
+  }
+
   @override
   void initState() {
     initPlatformState();
@@ -62,6 +89,26 @@ class _MyAppState extends State<MyApp> {
               accentColor: Colors.white,
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
+            locale: _locale,
+            supportedLocales: [
+              Locale("bs", "BA"),
+              Locale("sr", "RS"),
+            ],
+            localizationsDelegates: [
+              DemoLocalization.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            localeResolutionCallback: (locale, supportedLocales) {
+              for (var supportedLocale in supportedLocales) {
+                if (supportedLocale.languageCode == locale.languageCode &&
+                    supportedLocale.countryCode == locale.countryCode) {
+                  return supportedLocale;
+                }
+              }
+              return supportedLocales.first;
+            },
             home: auth.isAuth
                 ? HomeScreen()
                 : FutureBuilder(
@@ -85,6 +132,7 @@ class _MyAppState extends State<MyApp> {
               ZakaziObredScreen.routeName: (ctx) => ZakaziObredScreen(),
               ObredKonverzacijaScreen.routeName: (ctx) => ObredKonverzacijaScreen(),
               ObredZahtjeviScreen.routeName: (ctx) => ObredZahtjeviScreen(),
+              KorisniLinkoviScreen.routeName: (ctx) => KorisniLinkoviScreen()
             },
           ),
         ));

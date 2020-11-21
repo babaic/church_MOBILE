@@ -1,7 +1,7 @@
 class Novost {
   final int id;
-  final String naslov;
-  final String text;
+  String naslov;
+  String text;
   final String datum;
   final String glavnaSlika;
   final List<dynamic> slike;

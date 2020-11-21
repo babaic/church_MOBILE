@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:saborna_crkva/localization/language_constants.dart';
 import 'package:saborna_crkva/models/donacija.dart';
 import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/providers/donacije.dart';
@@ -89,9 +90,9 @@ class _DonirajScreenState extends State<DonirajScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Doniraj'),
+        title: Text(getTranslated(context, 'doniraj')),
         actions: [
-          FlatButton.icon(onPressed: () => Navigator.of(context).pushReplacementNamed(DonacijeScreen.routeName), icon: Icon(Icons.history), label: Text('Moje donacije'), textColor: Colors.white,)
+          FlatButton.icon(onPressed: () => Navigator.of(context).pushReplacementNamed(DonacijeScreen.routeName), icon: Icon(Icons.history), label: Text(getTranslated(context, 'mojeDonacije')), textColor: Colors.white,)
         ],
       ),
       body: Container(
@@ -142,7 +143,7 @@ class IznosPorukaPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
-                  'Unesi iznos donacije',
+                  getTranslated(context, 'iznosDonacije'),
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -157,7 +158,7 @@ class IznosPorukaPage extends StatelessWidget {
                   },
                   onSaved: (value) => _iznos = int.parse(value),
                   decoration:
-                      InputDecoration(labelText: 'Iznos', suffix: Text('KM')),
+                      InputDecoration(labelText: getTranslated(context, 'iznos'), suffix: Text('KM')),
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.right,
                   style: TextStyle(fontSize: 20),
@@ -166,7 +167,7 @@ class IznosPorukaPage extends StatelessWidget {
               Container(
                 width: 200,
                 child: TextFormField(
-                  decoration: InputDecoration(labelText: 'Poruka'),
+                  decoration: InputDecoration(labelText: getTranslated(context, 'poruka')),
                   onSaved: (value) => _desc = value,
                   keyboardType: TextInputType.multiline,
                 ),
@@ -175,7 +176,7 @@ class IznosPorukaPage extends StatelessWidget {
                   width: 200,
                   padding: const EdgeInsets.only(top: 20.0),
                   child: FlatButton(
-                    child: Text('Dalje'),
+                    child: Text(getTranslated(context, 'dalje')),
                     onPressed: _trySubmit,
                     color: Colors.green,
                     textColor: Colors.white,
@@ -232,7 +233,7 @@ class KarticaPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
-                  'Doniraj karticom',
+                  getTranslated(context, 'donirajKarticom'),
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -246,7 +247,7 @@ class KarticaPage extends StatelessWidget {
                     return null;
                   },
                   onSaved: (value) => _brKartica = value,
-                  decoration: InputDecoration(labelText: 'Broj kartice'),
+                  decoration: InputDecoration(labelText: getTranslated(context, 'brojKartice')),
                   inputFormatters: [
                     MaskedTextInputFormatter(
                       mask: 'xxxx-xxxx-xxxx-xxxx',
@@ -273,7 +274,7 @@ class KarticaPage extends StatelessWidget {
                           _mjesec = value.substring(0, 2);
                           _godina = value.substring(3, 5);
                         },
-                        decoration: InputDecoration(labelText: 'Važi do'),
+                        decoration: InputDecoration(labelText: getTranslated(context, 'vaziDo')),
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           MaskedTextInputFormatter2(
@@ -304,7 +305,7 @@ class KarticaPage extends StatelessWidget {
                   width: 200,
                   padding: const EdgeInsets.only(top: 20.0),
                   child: FlatButton(
-                    child: Text('Doniraj '),
+                    child: Text(getTranslated(context, 'doniraj')),
                     onPressed: _trySubmit,
                     color: Colors.green,
                     textColor: Colors.white,
@@ -324,7 +325,7 @@ class SuccessPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset('assets/images/checkmark.png'),
-          Text('Hvala Vam na donaciji', style: TextStyle(fontWeight: FontWeight.bold),),
+          Text(getTranslated(context, 'hvalaNaDonaciji'), style: TextStyle(fontWeight: FontWeight.bold),),
         ],
     );
   }

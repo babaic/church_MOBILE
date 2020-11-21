@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:saborna_crkva/localization/language_constants.dart';
 import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/providers/svecenik.dart';
 import 'package:saborna_crkva/widgets/svecenikCard.dart';
@@ -18,7 +19,7 @@ class _PitajSvecenikaScreenState extends State<PitajSvecenikaScreen> {
     print(imeprezimeNull);
     return Scaffold(
         appBar: AppBar(
-          title: Text('Pitaj svećenika'),
+          title: Text(getTranslated(context, 'pitaj_svecenika')),
         ),
         body: imeprezimeNull ? Center(child: Text('Potrebno unijeti ime i prezime ukoliko želite postaviti pitanje svećeniku.', textAlign: TextAlign.center,),) : FutureBuilder(
           future: Provider.of<Svecenik>(context, listen: false).fetchAndSetSvecenici(),
