@@ -2,10 +2,13 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:saborna_crkva/localization/language_constants.dart';
 import 'package:saborna_crkva/models/novost.dart';
 
 import '../globalVar.dart';
 import 'package:http/http.dart' as http;
+
+import '../helper.dart';
 
 class Novosti with ChangeNotifier {
 
@@ -49,6 +52,34 @@ class Novosti with ChangeNotifier {
         datum: novost['datumObjavljivanja'],
         slike: novost['slike']
       ));
+    });
+
+    var pismo = await getLocale();
+
+    novostiToAdd.forEach((novost) {
+      String prevodNaslov = '';
+      String prevodTekst = '';
+
+      for(var slovo = 0; slovo < novost.naslov.length; slovo++) {
+        if(pismo.languageCode == 'sr') {
+          prevodNaslov+= Helper.convertLatinToCyrillic(novost.naslov[slovo]);
+        }
+        else {
+          prevodNaslov+= Helper.convertCyrillicToLatin(novost.naslov[slovo]);
+        }
+      }
+      novost.naslov = prevodNaslov;
+
+      for(var slovo = 0; slovo < novost.text.length; slovo++) {
+        if(pismo.languageCode == 'sr') {
+          prevodTekst+= Helper.convertLatinToCyrillic(novost.text[slovo]);
+        }
+        else {
+          prevodTekst+= Helper.convertCyrillicToLatin(novost.text[slovo]);
+        }
+      }
+      novost.text = prevodTekst;
+
     });
 
     _novosti = _novosti + novostiToAdd;

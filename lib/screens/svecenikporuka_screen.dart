@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:saborna_crkva/localization/language_constants.dart';
 import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/providers/poruke.dart';
 
@@ -70,7 +71,7 @@ class _SvecenikPorukaScreenState extends State<SvecenikPorukaScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Napiši poruku ' + svecenikImePrezime),
+          title: Text(getTranslated(context, 'napisi_poruku') + svecenikImePrezime),
           
         ),
         body: FutureBuilder(

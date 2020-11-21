@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:saborna_crkva/localization/language_constants.dart';
 import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/providers/obredi.dart';
 import 'package:saborna_crkva/providers/svecenik.dart';
@@ -75,14 +76,14 @@ class _ObredKonverzacijaScreenState extends State<ObredKonverzacijaScreen> {
     var isZavrseno = Provider.of<Obredi>(context, listen: false).isZavrsen(args);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Konverzacija'),
+        title: Text(getTranslated(context, 'konverzacija')),
         actions: [
           if(user.role == 'Svecenik')
           FlatButton.icon(onPressed: () {
             setState(() {
               Provider.of<Obredi>(context, listen: false).updateStatus(args, 'Zavrseno');
             });
-          }, icon: Icon(isZavrseno ? Icons.lock : Icons.lock_open), label: Text( isZavrseno ? 'Završeno' : 'Završi'), textColor: Colors.white,)
+          }, icon: Icon(isZavrseno ? Icons.lock : Icons.lock_open), label: Text( isZavrseno ? getTranslated(context, 'zavrseno') : getTranslated(context, 'zavrsi')), textColor: Colors.white,)
         ],
       ),
       body: FutureBuilder(
@@ -134,7 +135,7 @@ class _ObredKonverzacijaScreenState extends State<ObredKonverzacijaScreen> {
                   },
                 ),
               ),
-              isZavrseno ? Center(child: Container(height: 30, child: Text('Konverzacija je završena.')),) : NewMessage(collectionName: 'obredi', senderId: user.id.toString(), sender: user.username, documentId: documentId, primaocId: null, primaocListId: userids, obredId: args, isSpam: false,),
+              isZavrseno ? Center(child: Container(height: 30, child: Text(getTranslated(context, 'konverzacijaZavrsena'))),) : NewMessage(collectionName: 'obredi', senderId: user.id.toString(), sender: user.username, documentId: documentId, primaocId: null, primaocListId: userids, obredId: args, isSpam: false,),
             ],
           );
         }

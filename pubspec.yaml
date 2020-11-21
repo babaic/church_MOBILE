@@ -30,6 +30,9 @@ dependencies:
   cloud_firestore: ^0.13.5
   carousel_slider: ^2.3.1
   onesignal_flutter: ^2.6.1
+  flutter_localizations:
+    sdk: flutter
+  url_launcher: ^5.0.2
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -59,6 +62,9 @@ flutter:
     - assets/images/main.jpg
     - assets/images/donate.png
     - assets/images/bankcard.png
+    - lib/lang/bs.json
+    - lib/lang/sr.json
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

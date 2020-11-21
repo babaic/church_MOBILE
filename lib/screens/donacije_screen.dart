@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:saborna_crkva/localization/language_constants.dart';
 import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/providers/donacije.dart';
 
@@ -34,14 +35,14 @@ class DonacijeScreen extends StatelessWidget {
         Image.asset(
             'assets/images/emptydonations.png'),
         Text(
-          'Nemate donacija',
+          getTranslated(context, 'nemateDonacija'),
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
         SizedBox(
           height: 30,
         ),
         FlatButton(
-          child: Text('Doniraj sada'),
+          child: Text(getTranslated(context, 'donirajSada')),
           onPressed: () =>
               Navigator.of(context).popAndPushNamed(DonirajScreen.routeName),
           color: Colors.green[100],
@@ -59,7 +60,7 @@ class DonacijeScreen extends StatelessWidget {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text('Donacije'),
+        title: Text(getTranslated(context, 'donacije')),
       ),
       body: Container(
           width: double.infinity,

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:saborna_crkva/localization/language_constants.dart';
 import 'package:saborna_crkva/models/conversation.dart';
 import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/widgets/conversation_bubble.dart';
@@ -17,7 +18,7 @@ class ConversationsScreen extends StatelessWidget {
     var userData = Provider.of<Auth>(context, listen: false).user;
     return Scaffold(
         appBar: AppBar(
-          title: Text('Poruke'),
+          title: Text(getTranslated(context, 'poruke')),
         ),
         body: FutureBuilder(
           future: Firestore.instance

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:saborna_crkva/localization/language_constants.dart';
 import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/providers/obredi.dart';
 
@@ -61,12 +62,12 @@ class _ZakaziObredScreenState extends State<ZakaziObredScreen> {
     print('zakazi obred build');
     return Scaffold(
       appBar: AppBar(
-        title: Text('Zakaži obred'),
+        title: Text(getTranslated(context, 'zakaziObred')),
         actions: [
           FlatButton.icon(
             onPressed: () => Navigator.of(context).pushNamed(ObredZahtjeviScreen.routeName, arguments: userData.id),
             icon: Icon(Icons.history),
-            label: Text('Moji zahtjevi'),
+            label: Text(getTranslated(context, 'mojiZahtjevi')),
             textColor: Colors.white,
           )
         ],
@@ -77,7 +78,7 @@ class _ZakaziObredScreenState extends State<ZakaziObredScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('Odaberite kategoriju', style: TextStyle(fontSize: 25)),
+            Text(getTranslated(context, 'odaberiKategoriju'), style: TextStyle(fontSize: 25)),
             _isLoading
                 ? Center(
                     child: CircularProgressIndicator(),
@@ -95,7 +96,7 @@ class _ZakaziObredScreenState extends State<ZakaziObredScreen> {
               width: double.infinity,
               padding: EdgeInsets.only(left: 20, right: 20),
               child: RaisedButton(
-                child: Text('ZAKAŽI'),
+                child: Text(getTranslated(context, 'zakazi')),
                 color: Colors.green,
                 textColor: Colors.white,
                 onPressed: zakaziObred,

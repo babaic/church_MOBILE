@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:saborna_crkva/globalVar.dart';
+import 'package:saborna_crkva/localization/language_constants.dart';
 import 'package:saborna_crkva/providers/novosti.dart';
 import 'package:saborna_crkva/widgets/novosti_post.dart';
 import 'package:http/http.dart' as http;
@@ -33,7 +34,7 @@ class _NovostiScreenState extends State<NovostiScreen> {
     _scrollController.addListener(() async {
       if(_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
         if(pageNumber != Provider.of<Novosti>(context, listen: false).totalPage) {
-          showInSnackBar('Učitavanje vijesti...', 20);
+          showInSnackBar(getTranslated(context, 'ucitavanjeVijesti'), 20);
           try {
             var res = await Provider.of<Novosti>(context, listen: false).getNovosti(pageNumber: ++pageNumber);
           }
@@ -43,7 +44,7 @@ class _NovostiScreenState extends State<NovostiScreen> {
           _scaffoldKey.currentState.hideCurrentSnackBar();
         }
         else {
-          showInSnackBar('Nema više vijesti', 4);
+          showInSnackBar(getTranslated(context, 'nemaVijesti'), 4);
         }
       }
     });
@@ -67,7 +68,7 @@ class _NovostiScreenState extends State<NovostiScreen> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Novosti'),
+        title: Text(getTranslated(context, 'novosti')),
         actions: [
          
         ],

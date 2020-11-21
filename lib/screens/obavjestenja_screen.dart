@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:saborna_crkva/localization/language_constants.dart';
 import 'package:saborna_crkva/providers/obavijesti.dart';
 import 'package:saborna_crkva/widgets/obavijesti_post.dart';
 
@@ -41,14 +42,14 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
           _scrollController.position.maxScrollExtent) {
         if (pageNumber !=
             Provider.of<Obavijesti>(context, listen: false).totalPage) {
-          showInSnackBar('Učitavanje obavijesti...', 20);
+          showInSnackBar(getTranslated(context, '_ucitavanjeObavijesti'), 20);
           try {
             var res = await Provider.of<Obavijesti>(context, listen: false)
                 .getObavijesti(pageNumber: ++pageNumber, id: categoryId);
           } catch (error) {}
           _scaffoldKey.currentState.hideCurrentSnackBar();
         } else {
-          showInSnackBar('Nema više obavijesti', 4);
+          showInSnackBar(getTranslated(context, '_nemaObavijesti'), 4);
         }
       }
     });
@@ -89,7 +90,7 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Obavijesti'),
+        title: Text(getTranslated(context, 'obavijesti')),
         actions: [
           _popup()
           //FlatButton.icon(onPressed: () => Provider.of<Obavijesti>(context, listen: false).getCategories(), icon: Icon(Icons.category), label: Text('ok'))
