@@ -80,7 +80,7 @@ class _NewMessageState extends State<NewMessage> {
     //SEND NOTIFICATION VIA ONESIGNAL
     if(widget.primaocId != null) {
       print('send to one');
-      //Notifikacije.sendNotificationForOneUser(userId: widget.primaocId, content: _enteredMessage);
+      Notifikacije.sendNotificationForOneUser(userId: widget.primaocId, content: _enteredMessage);
     }
     else {
       Notifikacije.sendNotificationForManyUsers(userId: widget.primaocListId, content: _enteredMessage);
@@ -89,12 +89,12 @@ class _NewMessageState extends State<NewMessage> {
       for(var i = 0; i < svecenici.length; i++) {
         if(svecenici[i].id.toString() == widget.senderId) {
           //SVECENIK JE NAPISAO PORUKU PROMIJENI STATUS U ODGOVORENO
-          await Provider.of<Obredi>(context, listen: false).updateStatus(widget.obredId, 'Odgovoreno');
+          await Provider.of<Obredi>(context, listen: false).updateStatus(widget.obredId, 'Odgovoreno', Provider.of<Auth>(context, listen: false).token);
           return;
         }
       }
       //KORISNIK JE NAPISAO PORUKU PROMIJENI STATUS U NIJE ODGOVORENO
-      await Provider.of<Obredi>(context, listen: false).updateStatus(widget.obredId, 'Nije odgovoreno');
+      await Provider.of<Obredi>(context, listen: false).updateStatus(widget.obredId, 'Nije odgovoreno', Provider.of<Auth>(context, listen: false).token);
     
     }
     

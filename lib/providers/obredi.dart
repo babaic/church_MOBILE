@@ -48,13 +48,9 @@ class Obredi with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<int> zakaziObred(int userId, int obredKategorijaId) async {
+  Future<int> zakaziObred(int userId, int obredKategorijaId, String token) async {
     var url = GlobalVar.apiUrl+'obredi/addobred';
-    Map<String, String> headers = {
-      'Content-Type': 'application/json;charset=UTF-8',
-      'Charset': 'utf-8'
-    };
-    var response = await http.post(url, headers: headers, body: json.encode({
+    var response = await http.post(url, headers: GlobalVar.headersToken(token), body: json.encode({
       'userId': userId,
       'obredKategorijaId': obredKategorijaId
     }));
@@ -65,7 +61,7 @@ class Obredi with ChangeNotifier {
 
   }
 
-  Future<void> getObredi(int userid, String status) async {
+  Future<void> getObredi(int userid, String status, String token) async {
     print('getObredi');
     var url = GlobalVar.apiUrl+'obredi/getobredi';
 
@@ -79,7 +75,7 @@ class Obredi with ChangeNotifier {
     
     var uri = new Uri.http(GlobalVar.apiUri, "/api/obredi/getobredi", queryParams);
     print(uri);
-    var response = await http.get(uri, headers: GlobalVar.headers);
+    var response = await http.get(uri, headers: GlobalVar.headersToken(token));
     var extractedResult = json.decode(response.body) as List<dynamic>;
     List<Obred> obrediToAdd = new List<Obred>();
     extractedResult.forEach((obred) {
@@ -96,14 +92,11 @@ class Obredi with ChangeNotifier {
 }
 
 
-  Future<void> updateStatus(int obredId, String status) async {
+  Future<void> updateStatus(int obredId, String status, String token) async {
     final obredIndex = _obredi.indexWhere((obred) => obred.id == obredId);
     var url = GlobalVar.apiUrl+'obredi/updatestatus/$obredId';
-    Map<String, String> headers = {
-      'Content-Type': 'application/json;charset=UTF-8',
-      'Charset': 'utf-8'
-    };
-    var response = http.put(url, headers: headers, body: json.encode({
+
+    var response = http.put(url, headers: GlobalVar.headersToken(token), body: json.encode({
       'status': status
     }));
     _obredi[obredIndex].status = status;
@@ -113,10 +106,10 @@ class Obredi with ChangeNotifier {
 
   bool isZavrsen(int obredId) {
     var obredIndex = _obredi.indexWhere((element) => element.id == obredId);
-    if(obredIndex < 1) {
+    print(_obredi[obredIndex].status);
+    if(obredId < 1) {
       return false;
     }
-    print(_obredi[obredIndex].status == 'Zavrseno');
     return _obredi[obredIndex].status == 'Zavrseno';
   }
 

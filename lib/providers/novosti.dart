@@ -21,7 +21,7 @@ class Novosti with ChangeNotifier {
     return [..._novosti];
   }
   
-  Future<void> getNovosti({int pageNumber, int id}) async {
+  Future<void> getNovosti({int pageNumber, int id, String token}) async {
     //if it's first call clear old data
     if(pageNumber == 1) {
       _novosti = [];
@@ -31,12 +31,7 @@ class Novosti with ChangeNotifier {
       url+= '&id=$id';
     }
 
-    Map<String, String> headers = {
-    'Content-Type': 'application/json;charset=UTF-8',
-    'Charset': 'utf-8'
-    };
-
-    var result = await http.get(url, headers: headers);
+    var result = await http.get(url, headers: GlobalVar.headersToken(token));
     var extractData = json.decode(result.body);
 
     List<Novost> novostiToAdd = new List<Novost>();
@@ -86,14 +81,10 @@ class Novosti with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getImages(int id) async {
+  Future<void> getImages(int id, String token) async {
     var url = GlobalVar.apiUrl+'novosti/getslike/$id';
 
-    Map<String, String> headers = {
-    'Content-Type': 'application/json;charset=UTF-8',
-    'Charset': 'utf-8'
-    };
-    var result = await http.get(url, headers: headers);
+    var result = await http.get(url, headers: GlobalVar.headersToken(token));
     var extractData = json.decode(result.body)['slike'];
 
     List<Uint8List> slikeGalerija = new List<Uint8List>();

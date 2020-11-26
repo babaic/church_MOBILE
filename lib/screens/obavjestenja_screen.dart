@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:saborna_crkva/localization/language_constants.dart';
+import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/providers/obavijesti.dart';
 import 'package:saborna_crkva/widgets/obavijesti_post.dart';
 
@@ -45,7 +46,7 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
           showInSnackBar(getTranslated(context, '_ucitavanjeObavijesti'), 20);
           try {
             var res = await Provider.of<Obavijesti>(context, listen: false)
-                .getObavijesti(pageNumber: ++pageNumber, id: categoryId);
+                .getObavijesti(pageNumber: ++pageNumber, id: categoryId, token: Provider.of<Auth>(context, listen: false).token);
           } catch (error) {}
           _scaffoldKey.currentState.hideCurrentSnackBar();
         } else {
@@ -98,7 +99,7 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
       ),
       body: FutureBuilder(
         future: Provider.of<Obavijesti>(context, listen: false)
-            .getObavijesti(pageNumber: 1, id: categoryId),
+            .getObavijesti(pageNumber: 1, id: categoryId, token: Provider.of<Auth>(context, listen: false).token),
         builder: (ctx, futureSnapshot) {
           if (futureSnapshot.connectionState == ConnectionState.waiting) {
             return Center(

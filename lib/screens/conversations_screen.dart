@@ -46,7 +46,7 @@ class ConversationsScreen extends StatelessWidget {
             if(futureSnapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator(),);
             }
-            return ListView.builder(itemCount: conversations.length, itemBuilder: (ctx, index) => ConversationBubble(conversations[index].sender, conversations[index].svecenikId, conversations[index].lastMessage, conversations[index].otherUser, conversations[index].ucesnici));
+            return conversations.length == 0 ? Center(child: Text('Nemate poruka'),) : ListView.builder(itemCount: conversations.length, itemBuilder: (ctx, index) => ConversationBubble(conversations[index].sender, conversations[index].svecenikId, conversations[index].lastMessage, conversations[index].otherUser, conversations[index].ucesnici));
         })
         );
   }

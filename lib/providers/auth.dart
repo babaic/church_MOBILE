@@ -24,6 +24,11 @@ class Auth with ChangeNotifier {
     return _user;
   }
 
+  String get token {
+    return _token;
+  }
+
+
   Future<void> setUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final extractedData = json.decode(prefs.getString('userData')) as Map<String, Object>;
@@ -76,6 +81,7 @@ class Auth with ChangeNotifier {
       });
       await prefs.setString('userData', userData);
       await setUserData();
+      _token = data['token'];
       _handleGetPermissionSubscriptionState();
     }
     else {

@@ -81,7 +81,7 @@ class _ObredKonverzacijaScreenState extends State<ObredKonverzacijaScreen> {
           if(user.role == 'Svecenik')
           FlatButton.icon(onPressed: () {
             setState(() {
-              Provider.of<Obredi>(context, listen: false).updateStatus(args, 'Zavrseno');
+              Provider.of<Obredi>(context, listen: false).updateStatus(args, 'Zavrseno', Provider.of<Auth>(context, listen: false).token);
             });
           }, icon: Icon(isZavrseno ? Icons.lock : Icons.lock_open), label: Text( isZavrseno ? getTranslated(context, 'zavrseno') : getTranslated(context, 'zavrsi')), textColor: Colors.white,)
         ],

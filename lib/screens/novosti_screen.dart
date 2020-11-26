@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:saborna_crkva/globalVar.dart';
 import 'package:saborna_crkva/localization/language_constants.dart';
+import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/providers/novosti.dart';
 import 'package:saborna_crkva/widgets/novosti_post.dart';
 import 'package:http/http.dart' as http;
@@ -36,7 +37,7 @@ class _NovostiScreenState extends State<NovostiScreen> {
         if(pageNumber != Provider.of<Novosti>(context, listen: false).totalPage) {
           showInSnackBar(getTranslated(context, 'ucitavanjeVijesti'), 20);
           try {
-            var res = await Provider.of<Novosti>(context, listen: false).getNovosti(pageNumber: ++pageNumber);
+            var res = await Provider.of<Novosti>(context, listen: false).getNovosti(pageNumber: ++pageNumber, token: Provider.of<Auth>(context, listen: false).token);
           }
           catch (error) {
 
@@ -74,7 +75,7 @@ class _NovostiScreenState extends State<NovostiScreen> {
         ],
       ),
       body: FutureBuilder(
-        future: Provider.of<Novosti>(context, listen: false).getNovosti(pageNumber: 1),
+        future: Provider.of<Novosti>(context, listen: false).getNovosti(pageNumber: 1, token: Provider.of<Auth>(context, listen: false).token),
         builder: (ctx, futureSnapshot) {
           if (futureSnapshot.connectionState == ConnectionState.waiting) {
             return Center(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:saborna_crkva/localization/language_constants.dart';
+import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/providers/novosti.dart';
 
 class NovostiDetailsScreen extends StatelessWidget {
@@ -55,7 +56,7 @@ class NovostiDetailsScreen extends StatelessWidget {
                 children: [
                   FutureBuilder(
                     future: Provider.of<Novosti>(context, listen: false)
-                        .getImages(id),
+                        .getImages(id, Provider.of<Auth>(context, listen: false).token),
                     builder: (ctx, futureSnapShot) {
                       if (futureSnapShot.connectionState ==
                           ConnectionState.waiting) {

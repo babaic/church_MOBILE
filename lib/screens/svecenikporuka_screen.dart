@@ -62,6 +62,7 @@ class _SvecenikPorukaScreenState extends State<SvecenikPorukaScreen> {
     svecenikImePrezime = args['imePrezime'];
     primaocId = args['svecenikId'];
     ucesnici = args['ucesnici'];
+    print(args);
 
     if (primaocId == user.id.toString()) {
       primaocId = ucesnici[0] == primaocId ? ucesnici[1] : ucesnici[0];
@@ -116,13 +117,15 @@ class _SvecenikPorukaScreenState extends State<SvecenikPorukaScreen> {
                   }
                   final documents = streamSnapshot.data.documents;
 
-                  if ((documents[0]['senderId'] == documents[1]['senderId'] &&
+                  if(documents.length >= 3) {
+                    if ((documents[0]['senderId'] == documents[1]['senderId'] &&
                           documents[1]['senderId'] ==
                               documents[2]['senderId']) &&
                       documents[2]['senderId'] == user.id.toString()) {
                     spam = true;
-                  } else {
-                    spam = false;
+                    } else {
+                      spam = false;
+                    }
                   }
 
                   return Column(

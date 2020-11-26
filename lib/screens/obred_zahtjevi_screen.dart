@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:saborna_crkva/localization/language_constants.dart';
+import 'package:saborna_crkva/providers/auth.dart';
 import 'package:saborna_crkva/providers/obredi.dart';
 
 import 'obred_konverzacija.dart';
@@ -142,7 +143,7 @@ class _ObredZahtjeviScreenState extends State<ObredZahtjeviScreen> {
           ],
         ),
         body: FutureBuilder(
-            future: Provider.of<Obredi>(context, listen: false).getObredi(args, selectedStatus),
+            future: Provider.of<Obredi>(context, listen: false).getObredi(args, selectedStatus, Provider.of<Auth>(context, listen: false).token),
             builder: (ctx, futureSnapshot) {
               if (futureSnapshot.connectionState == ConnectionState.waiting) {
                 return Center(

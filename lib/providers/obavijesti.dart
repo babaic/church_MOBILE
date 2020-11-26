@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:saborna_crkva/localization/language_constants.dart';
 import 'package:saborna_crkva/models/obavijest.dart';
 
@@ -9,6 +10,7 @@ import '../globalVar.dart';
 import 'package:http/http.dart' as http;
 
 import '../helper.dart';
+import 'auth.dart';
 
 class Kategorija {
   final int kategorijaId;
@@ -31,25 +33,22 @@ class Obavijesti with ChangeNotifier {
     return [..._kategorije];
   }
 
-    Future<void> getObavijesti({int pageNumber, int id}) async {
+    Future<void> getObavijesti({int pageNumber, int id, String token}) async {
     //if it's first call clear old data
     if(pageNumber == 1) {
       _obavijesti = [];
       _kategorije = [];
-      await getCategories(id);
+      await getCategories(id, token);
     }
     var url = GlobalVar.apiUrl+'obavjestenja/getobavjestenja?pageNumber=$pageNumber';
     if(id != null) {
       url+= '&kategorijaid=$id';
     }
 
-    Map<String, String> headers = {
-    'Content-Type': 'application/json;charset=UTF-8',
-    'Charset': 'utf-8'
-    };
-
-    var result = await http.get(url, headers: headers);
+    var result = await http.get(url, headers: GlobalVar.headersToken(token));
     var extractData = json.decode(result.body) as Map<String, dynamic>;
+
+    print(result.statusCode);
 
     List<Obavijest> obavijestiToAdd = new List<Obavijest>();
 
@@ -102,14 +101,11 @@ class Obavijesti with ChangeNotifier {
     notifyListeners();
   }
   
-  Future<void> getImages(int id) async {
+  Future<void> getImages(int id, String token) async {
     var url = GlobalVar.apiUrl+'obavjestenja/getslike/$id';
 
-    Map<String, String> headers = {
-    'Content-Type': 'application/json;charset=UTF-8',
-    'Charset': 'utf-8'
-    };
-    var result = await http.get(url, headers: headers);
+
+    var result = await http.get(url, headers: GlobalVar.headersToken(token));
     var extractData = json.decode(result.body)['slike'];
 
     List<Uint8List> slikeGalerija = new List<Uint8List>();
@@ -122,14 +118,10 @@ class Obavijesti with ChangeNotifier {
     
   }
 
-  Future<void> getCategories(int id) async {
+  Future<void> getCategories(int id, String token) async {
    var url = GlobalVar.apiUrl+'obavjestenja/getkategorije';
 
-    Map<String, String> headers = {
-    'Content-Type': 'application/json;charset=UTF-8',
-    'Charset': 'utf-8'
-    };
-    var result = await http.get(url, headers: headers);
+    var result = await http.get(url, headers: GlobalVar.headersToken(token));
     var extractData = json.decode(result.body);
     for(var i = 0; i < extractData.length; i++) {
       _kategorije.add(Kategorija(extractData[i]['obavjestenjaKategorijeID'], extractData[i]['naziv']));
