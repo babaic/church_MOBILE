@@ -53,7 +53,7 @@ class _ZakaziObredScreenState extends State<ZakaziObredScreen> {
 
   Future<void> zakaziObred() async {
     obredId = await Provider.of<Obredi>(context, listen: false).zakaziObred(Provider.of<Auth>(context, listen: false).user.id,_odabranaKategorija, Provider.of<Auth>(context, listen: false).token);
-    obredId == 0 ? Helper.showErrorDialog('Napomena', 'U toku jednog dana možete poslati jedan zahtjev za obred.', context) : Navigator.of(context).popAndPushNamed(ObredKonverzacijaScreen.routeName, arguments: obredId);
+    obredId == 0 ? Helper.showErrorDialog('Napomena', 'U toku jednog dana možete poslati jedan zahtjev za obred.', context) : Navigator.of(context).popAndPushNamed(ObredKonverzacijaScreen.routeName, arguments: {'id': obredId, 'status': 'N/A'});
   }
 
   @override
@@ -81,7 +81,7 @@ class _ZakaziObredScreenState extends State<ZakaziObredScreen> {
             Text(getTranslated(context, 'odaberiKategoriju'), style: TextStyle(fontSize: 25)),
             _isLoading
                 ? Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColorDark)),
                   )
                 : Consumer<Obredi>(
                     builder: (ctx, obredi, _) => Expanded(
