@@ -13,6 +13,9 @@ class GlobalVar {
     };
   }
 
+
+
+
   
 
   //image urls
