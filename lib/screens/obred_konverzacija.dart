@@ -19,6 +19,7 @@ class _ObredKonverzacijaScreenState extends State<ObredKonverzacijaScreen> {
   String documentId;
   bool _isInit = true;
   List<String> userids = [];
+  bool justFinished = false;//this will be TRUE <only> first time when Zavrseno button is pressed. // part of #bugfix
 
   // @override
   // void initState() {
@@ -72,8 +73,8 @@ class _ObredKonverzacijaScreenState extends State<ObredKonverzacijaScreen> {
   Widget build(BuildContext context) {
     print('obred konverzacija build');
     final user = Provider.of<Auth>(context, listen: false).user;
-    var args = ModalRoute.of(context).settings.arguments as int;
-    var isZavrseno = Provider.of<Obredi>(context, listen: false).isZavrsen(args);
+    var args = ModalRoute.of(context).settings.arguments as Map<String, Object>;
+    var isZavrseno = args['status'] == 'Zavrseno';
     return Scaffold(
       appBar: AppBar(
         title: Text(getTranslated(context, 'konverzacija')),
@@ -81,20 +82,21 @@ class _ObredKonverzacijaScreenState extends State<ObredKonverzacijaScreen> {
           if(user.role == 'Svecenik')
           FlatButton.icon(onPressed: () {
             setState(() {
-              Provider.of<Obredi>(context, listen: false).updateStatus(args, 'Zavrseno', Provider.of<Auth>(context, listen: false).token);
+              Provider.of<Obredi>(context, listen: false).updateStatus(args['id'], 'Zavrseno', Provider.of<Auth>(context, listen: false).token);
+              justFinished = true;
             });
-          }, icon: Icon(isZavrseno ? Icons.lock : Icons.lock_open), label: Text( isZavrseno ? getTranslated(context, 'zavrseno') : getTranslated(context, 'zavrsi')), textColor: Colors.white,)
+          }, icon: Icon(isZavrseno || justFinished ? Icons.lock : Icons.lock_open), label: Text( isZavrseno || justFinished ? getTranslated(context, 'zavrseno') : getTranslated(context, 'zavrsi')), textColor: Colors.white,)
         ],
       ),
       body: FutureBuilder(
         future: Firestore.instance
                 .collection('obredi')
-                .where("obredId", isEqualTo: args.toString())
+                .where("obredId", isEqualTo: args['id'].toString())
                 .getDocuments()
                 .then((value) {
                   //first check if document exist
                   if (value.documents.length == 0) {
-                    documentId = createDocument(args);
+                    documentId = createDocument(args['id']);
                     print('creating document...');
                   } else {
                     //else document exist
@@ -135,7 +137,7 @@ class _ObredKonverzacijaScreenState extends State<ObredKonverzacijaScreen> {
                   },
                 ),
               ),
-              isZavrseno ? Center(child: Container(height: 30, child: Text(getTranslated(context, 'konverzacijaZavrsena'))),) : NewMessage(collectionName: 'obredi', senderId: user.id.toString(), sender: user.username, documentId: documentId, primaocId: null, primaocListId: userids, obredId: args, isSpam: false,),
+              isZavrseno || justFinished ? Center(child: Container(height: 30, child: Text(getTranslated(context, 'konverzacijaZavrsena'))),) : NewMessage(collectionName: 'obredi', senderId: user.id.toString(), sender: user.username, documentId: documentId, primaocId: null, primaocListId: userids, obredId: args['id'], isSpam: false,),
             ],
           );
         }

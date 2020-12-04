@@ -56,6 +56,10 @@ class Obredi with ChangeNotifier {
     }));
 
     var extractData = json.decode(response.body);
+    print('extractData: $extractData');
+    _obredi.forEach((element) {
+      print(element.id);
+    });
 
     return extractData['obredId'];
 
@@ -74,7 +78,6 @@ class Obredi with ChangeNotifier {
     }
     
     var uri = new Uri.http(GlobalVar.apiUri, "/api/obredi/getobredi", queryParams);
-    print(uri);
     var response = await http.get(uri, headers: GlobalVar.headersToken(token));
     var extractedResult = json.decode(response.body) as List<dynamic>;
     List<Obred> obrediToAdd = new List<Obred>();
@@ -93,6 +96,9 @@ class Obredi with ChangeNotifier {
 
 
   Future<void> updateStatus(int obredId, String status, String token) async {
+    print('updateStatus');
+    print('obredId: $obredId');
+    print('status: $status');
     final obredIndex = _obredi.indexWhere((obred) => obred.id == obredId);
     var url = GlobalVar.apiUrl+'obredi/updatestatus/$obredId';
 
@@ -105,9 +111,11 @@ class Obredi with ChangeNotifier {
   }
 
   bool isZavrsen(int obredId) {
+    print('isZavrsen $obredId');
     var obredIndex = _obredi.indexWhere((element) => element.id == obredId);
-    print(_obredi[obredIndex].status);
-    if(obredId < 1) {
+    print('obredIndex: $obredIndex');
+    //print(_obredi[obredIndex].status);
+    if(obredIndex < 1) {
       return false;
     }
     return _obredi[obredIndex].status == 'Zavrseno';

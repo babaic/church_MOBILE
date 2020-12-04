@@ -41,7 +41,7 @@ class _ObredZahtjeviScreenState extends State<ObredZahtjeviScreen> {
     return Material(
       child: InkWell(
         onTap: () => Navigator.of(context)
-            .pushNamed(ObredKonverzacijaScreen.routeName, arguments: id),
+            .pushNamed(ObredKonverzacijaScreen.routeName, arguments: {'id': id, 'status': status}),
         child: Card(
           child: Container(
             padding: EdgeInsets.all(10),
