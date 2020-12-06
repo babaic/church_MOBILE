@@ -37,14 +37,14 @@ class _ObredZahtjeviScreenState extends State<ObredZahtjeviScreen> {
       String datum,
       String status,
       int id,
-      BuildContext context}) {
+      BuildContext context, Size size}) {
     return Material(
       child: InkWell(
         onTap: () => Navigator.of(context)
             .pushNamed(ObredKonverzacijaScreen.routeName, arguments: {'id': id, 'status': status}),
         child: Card(
           child: Container(
-            padding: EdgeInsets.all(10),
+            padding: size.width < 360.0 ? EdgeInsets.all(0) : EdgeInsets.all(10),
             child: Row(
               children: [
                 Column(
@@ -58,7 +58,7 @@ class _ObredZahtjeviScreenState extends State<ObredZahtjeviScreen> {
                                 style: TextStyle(fontWeight: FontWeight.bold))),
                         Text(
                           naziv,
-                          style: TextStyle(letterSpacing: 2),
+                          style: TextStyle(letterSpacing: 1),
                         )
                       ],
                     ),
@@ -72,7 +72,7 @@ class _ObredZahtjeviScreenState extends State<ObredZahtjeviScreen> {
                             )),
                         Text(
                           imePrezime != null ? imePrezime : 'Nepoznat korisnik',
-                          style: TextStyle(letterSpacing: 2),
+                          style: TextStyle(letterSpacing: 1),
                         )
                       ],
                     ),
@@ -88,7 +88,7 @@ class _ObredZahtjeviScreenState extends State<ObredZahtjeviScreen> {
                           DateFormat('dd.MM.yyyy hh:mm')
                               .format(DateTime.parse(datum))
                               .toString(),
-                          style: TextStyle(letterSpacing: 2),
+                          style: TextStyle(letterSpacing: 1),
                         )
                       ],
                     )
@@ -113,6 +113,7 @@ class _ObredZahtjeviScreenState extends State<ObredZahtjeviScreen> {
   @override
   Widget build(BuildContext context) {
     print('rebuild called obred_zahtjevi_screen');
+    final deviceSize = MediaQuery.of(context).size;
     var args = ModalRoute.of(context).settings.arguments as int;
     return Scaffold(
         appBar: AppBar(
@@ -175,7 +176,7 @@ class _ObredZahtjeviScreenState extends State<ObredZahtjeviScreen> {
                               ? 'N/A'
                               : obredData.obredi[index].status,
                           id: obredData.obredi[index].id,
-                          context: context));
+                          context: context, size: deviceSize));
                 });
               }
             }));

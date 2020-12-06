@@ -12,17 +12,23 @@ class NovostiPost extends StatelessWidget {
   final int id;
   final String text;
   NovostiPost(this.glavnaSlika, this.naslov, this.datum, this.id, this.text);
-  
-  
+
   @override
   Widget build(BuildContext context) {
     print('NovostiPost build');
     final deviceSize = MediaQuery.of(context).size;
     return Material(
       child: InkWell(
-        onTap: () => Navigator.of(context).pushNamed(NovostiDetailsScreen.routeName, arguments: {'id':id, 'glavnaSlika': glavnaSlika, 'naslov': naslov, 'datum': datum, 'text': text}),
+        onTap: () => Navigator.of(context)
+            .pushNamed(NovostiDetailsScreen.routeName, arguments: {
+          'id': id,
+          'glavnaSlika': glavnaSlika,
+          'naslov': naslov,
+          'datum': datum,
+          'text': text
+        }),
         child: Container(
-          width: deviceSize.width,
+          width: double.infinity,
           padding: const EdgeInsets.all(8.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,21 +47,27 @@ class NovostiPost extends StatelessWidget {
                       fit: BoxFit.cover,
                     )),
               ),
-              Container(
-                width: deviceSize.width * 0.5,
-                height: deviceSize.height * 0.20,
-                padding: EdgeInsets.only(left: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      naslov,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                      softWrap: true,
-                    ),
-                    SizedBox(height: 20,),
-                    Text(DateFormat('dd.MM.yyyy hh:mm').format(DateTime.parse(datum)).toString()),
-                  ],
+              Expanded(
+                child: Container(
+                  width: deviceSize.width * 0.5,
+                  height: deviceSize.height * 0.20,
+                  padding: EdgeInsets.only(left: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        naslov,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                        softWrap: true,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(DateFormat('dd.MM.yyyy hh:mm')
+                          .format(DateTime.parse(datum))
+                          .toString()),
+                    ],
+                  ),
                 ),
               )
             ],

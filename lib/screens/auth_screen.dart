@@ -69,6 +69,8 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+    print(deviceSize.width);
+    print(deviceSize.height);
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -76,8 +78,8 @@ class _AuthScreenState extends State<AuthScreen> {
           alignment: Alignment.topCenter,
           children: [
             Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
+              width: double.infinity,
+              height: double.infinity,
               child: Image.asset(
                 'assets/images/paper.jpg',
                 fit: BoxFit.cover,
@@ -97,13 +99,13 @@ class _AuthScreenState extends State<AuthScreen> {
                   child: Text(
                     'Саборна црква Свете Тројице',
                     style: TextStyle(
-                        fontFamily: 'RuslanDisplay-Regular', fontSize: 20),
+                        fontFamily: 'RuslanDisplay-Regular', fontSize: deviceSize.height * 0.025),
                   ),
                 )
               ],
             ),
             Container(
-              padding: EdgeInsets.only(top: 100),
+              padding: EdgeInsets.only(top: deviceSize.height * 0.10),
               height: deviceSize.height,
               width: deviceSize.width,
               child: Column(
@@ -125,7 +127,8 @@ class _AuthScreenState extends State<AuthScreen> {
                       child: Column(
                         children: [
                           TextFormField(
-                            decoration: InputDecoration(labelText: 'E-Mail'),
+                            style: TextStyle(fontSize: deviceSize.height * 0.020),
+                            decoration: InputDecoration(labelText: 'E-Mail', errorStyle: TextStyle(fontSize: deviceSize.height * 0.010)),
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) {
                               if (value.isEmpty || !value.contains('@')) {
@@ -138,7 +141,8 @@ class _AuthScreenState extends State<AuthScreen> {
                           ),
                           if (_authMode == AuthMode.Signup)
                             TextFormField(
-                              decoration: InputDecoration(labelText: 'Ime'),
+                              style: TextStyle(fontSize: deviceSize.height * 0.020,),
+                              decoration: InputDecoration(labelText: 'Ime', errorStyle: TextStyle(fontSize: deviceSize.height * 0.010)),
                               validator: (value) {
                                 if (value.isEmpty) {
                                   return 'Unesite Vaše ime';
@@ -148,7 +152,8 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                           if (_authMode == AuthMode.Signup)
                             TextFormField(
-                              decoration: InputDecoration(labelText: 'Prezime'),
+                              style: TextStyle(fontSize: deviceSize.height * 0.020),
+                              decoration: InputDecoration(labelText: 'Prezime', errorStyle: TextStyle(fontSize: deviceSize.height * 0.010)),
                               validator: (value) {
                                 if (value.isEmpty) {
                                   return 'Unesite Vaše prezime';
@@ -157,8 +162,9 @@ class _AuthScreenState extends State<AuthScreen> {
                               onSaved: (value) => _authData['prezime'] = value,
                             ),
                           TextFormField(
+                            style: TextStyle(fontSize: deviceSize.height * 0.020),
                             controller: _passwordController,
-                            decoration: InputDecoration(labelText: 'Lozinka'),
+                            decoration: InputDecoration(labelText: 'Lozinka', errorStyle: TextStyle(fontSize: deviceSize.height * 0.010)),
                             obscureText: true,
                             validator: (value) {
                               if (value.isEmpty) {
@@ -171,9 +177,10 @@ class _AuthScreenState extends State<AuthScreen> {
                           ),
                           if (_authMode == AuthMode.Signup)
                             TextFormField(
+                              style: TextStyle(fontSize: deviceSize.height * 0.020),
                               enabled: _authMode == AuthMode.Signup,
                               decoration:
-                                  InputDecoration(labelText: 'Potvrdi lozinku'),
+                                  InputDecoration(labelText: 'Potvrdi lozinku', errorStyle: TextStyle(fontSize: deviceSize.height * 0.010)),
                               obscureText: true,
                               validator: _authMode == AuthMode.Signup
                                   ? (value) {
@@ -185,12 +192,13 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                           Container(
                             width: double.infinity,
+                            height: 50,
                             padding: EdgeInsets.only(top: 10),
                             child: RaisedButton(
                               color: Theme.of(context).primaryColorLight,
                               child: Text(_authMode == AuthMode.Login
                                   ? 'Prijava'
-                                  : 'Registracija'),
+                                  : 'Registracija', style: TextStyle(fontSize: deviceSize.height * 0.020)),
                               onPressed: () => submitForm(_authMode),
                             ),
                           ),
@@ -205,7 +213,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         _authMode == AuthMode.Login
                             ? 'Registruj se'
                             : 'Prijavi se',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
+                        style: TextStyle(color: Colors.black, fontSize: deviceSize.height * 0.025),
                       ),
                       onPressed: () {
                         setState(() {
@@ -215,12 +223,12 @@ class _AuthScreenState extends State<AuthScreen> {
                         });
                       },
                     ),
-                    padding: EdgeInsets.only(top: 40),
+                    //padding: EdgeInsets.only(top: 40),
                   ),
                 ],
               ),
             ),
-            Positioned(child: Text('❥ FIT Mostar', style: TextStyle(color: Colors.black, fontSize: 10),), bottom: 10,)
+            Positioned(child: Text('❥ FIT Mostar', style: TextStyle(color: Colors.black, fontSize: deviceSize.height * 0.010),), bottom: 10,)
           ],
         ),
       ),

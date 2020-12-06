@@ -52,10 +52,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           padding: EdgeInsets.all(5),
           margin: EdgeInsets.only(bottom: 15),
-          // height: 115,
-          // width: 180,
           height: devSize.height * 0.15,
-          width: devSize.width * 0.4,
+          width: devSize.width * 0.35 - 5,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -180,8 +178,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Stack(children: [
         Container(
-          height: deviceSize.height,
-          width: deviceSize.width,
+          height: double.infinity,
+          width: double.infinity,
           decoration: new BoxDecoration(
             color: const Color(0xff7c94b6),
             image: new DecorationImage(
@@ -195,12 +193,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         Container(
-          width: deviceSize.width,
+          width: double.infinity,
           padding: EdgeInsets.all(20),
           child: Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _wSelectItems(
                       getTranslated(context, 'pitaj_svecenika'),
@@ -217,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   userData.role.toLowerCase() == 'svecenik'
                       ? _wSelectItems(
@@ -241,7 +239,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _wSelectItems(getTranslated(context, 'korisni_kontakti'),
                       Icons.contact_mail, () => Navigator.of(context).pushNamed(KorisniLinkoviScreen.routeName), deviceSize),

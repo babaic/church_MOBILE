@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -30,7 +31,10 @@ import 'screens/obred_konverzacija.dart';
 import 'screens/obred_zahtjevi_screen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(DevicePreview(
+    enabled: false,
+    builder: (context) => MyApp(),
+  ));
 }
 
 class MyApp extends StatefulWidget {

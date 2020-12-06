@@ -39,7 +39,7 @@ class ObavijestiDetailsScreen extends StatelessWidget {
       ),
       body: Container(
         padding: EdgeInsets.all(10),
-        width: deviceSize.width,
+        width: double.infinity,
         child: Card(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
