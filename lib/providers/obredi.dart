@@ -35,12 +35,13 @@ class Obredi with ChangeNotifier {
     var response = await http.get(url);
 
     var extractData = json.decode(response.body);
+    print(extractData);
     List<ObredKategorija> kategorijeToAdd = new List<ObredKategorija>();
 
     extractData.forEach((kategorija) {
       //print(kategorija);
       kategorijeToAdd.add(ObredKategorija(
-       id: kategorija['id'],
+       id: kategorija['obrediKategorijeID'],
        naziv: kategorija['naziv']
       ));
     });
@@ -80,6 +81,7 @@ class Obredi with ChangeNotifier {
     var uri = new Uri.http(GlobalVar.apiUri, "/api/obredi/getobredi", queryParams);
     var response = await http.get(uri, headers: GlobalVar.headersToken(token));
     var extractedResult = json.decode(response.body) as List<dynamic>;
+    print(extractedResult);
     List<Obred> obrediToAdd = new List<Obred>();
     extractedResult.forEach((obred) {
       obrediToAdd.add(Obred(

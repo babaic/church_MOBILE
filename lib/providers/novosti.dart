@@ -82,6 +82,7 @@ class Novosti with ChangeNotifier {
   }
 
   Future<void> getImages(int id, String token) async {
+    print('getImages');
     var url = GlobalVar.apiUrl+'novosti/getslike/$id';
 
     var result = await http.get(url, headers: GlobalVar.headersToken(token));

@@ -8,6 +8,7 @@ import 'package:saborna_crkva/screens/obavjestenja_screen.dart';
 import 'package:saborna_crkva/screens/obred_zahtjevi_screen.dart';
 import 'package:saborna_crkva/screens/pitajsvecenika_screen.dart';
 import 'package:saborna_crkva/screens/zakazi_obred_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../main.dart';
 import 'conversations_screen.dart';
@@ -26,6 +27,14 @@ class _HomeScreenState extends State<HomeScreen> {
   void _changeLanguage(Language language) async {
     Locale _locale = await setLocale(language.languageCode);
     MyApp.setLocale(context, _locale);
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   void selectPismo(bool isLatinicaCheck) {
@@ -246,8 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   _wSelectItems(
                       getTranslated(context, 'doniraj'),
                       Icons.attach_money,
-                      () => Navigator.of(context)
-                          .pushNamed(DonirajScreen.routeName),
+                      () => _launchURL('https://192.168.0.15:45455/Home/Doniraj'),
                       deviceSize),
                 ],
               ),

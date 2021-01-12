@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:saborna_crkva/localization/language_constants.dart';
 import 'package:saborna_crkva/models/obavijest.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../globalVar.dart';
 import 'package:http/http.dart' as http;
@@ -45,10 +46,18 @@ class Obavijesti with ChangeNotifier {
       url+= '&kategorijaid=$id';
     }
 
+    //get user role
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final extractedData = json.decode(prefs.getString('userData')) as Map<String, Object>;
+    final String role = extractedData['role'].toString();
+    url+='&role=$role';
+    //print(role);
     var result = await http.get(url, headers: GlobalVar.headersToken(token));
     var extractData = json.decode(result.body) as Map<String, dynamic>;
 
-    print(result.statusCode);
+    //print(extractData);
+
+    //print(result.statusCode);
 
     List<Obavijest> obavijestiToAdd = new List<Obavijest>();
 
@@ -62,10 +71,12 @@ class Obavijesti with ChangeNotifier {
         glavnaSlika: obavijest['glavnaSlika'],
         datum: obavijest['datumObjavljivanja'],
         slike: obavijest['slike'],
-        kategorija: obavijest['kategorije'][0]['naziv'],
-        kategorijaId: obavijest['kategorije'][0]['obavjestenjaKategorijeID'],
+        kategorija: obavijest['kategorije'],
+        kategorijaId: obavijest['kategorijaId'],
       ));
     });
+
+    print(obavijestiToAdd);
 
     var pismo = await getLocale();
 
@@ -123,6 +134,7 @@ class Obavijesti with ChangeNotifier {
 
     var result = await http.get(url, headers: GlobalVar.headersToken(token));
     var extractData = json.decode(result.body);
+    //print(extractData);
     for(var i = 0; i < extractData.length; i++) {
       _kategorije.add(Kategorija(extractData[i]['obavjestenjaKategorijeID'], extractData[i]['naziv']));
     }
@@ -131,6 +143,7 @@ class Obavijesti with ChangeNotifier {
   }
 
   void changeSelectedCategory(int id) {
+    print(id);
     var katOld = _kategorije.firstWhere((element) => element.isSelected == true, orElse: () { return null; });
     if(katOld != null) {
       katOld.isSelected = false;

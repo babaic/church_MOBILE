@@ -113,8 +113,11 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
                     controller: _scrollController,
                     itemCount: obavijestiData.obavijesti.length,
                     itemBuilder: (ctx, index) {
-                      Uint8List glavnaSlika = Base64Codec()
+                      Uint8List glavnaSlika;
+                      if(obavijestiData.obavijesti[index].glavnaSlika != null) {
+                        glavnaSlika = Base64Codec()
                           .decode(obavijestiData.obavijesti[index].glavnaSlika);
+                      }
                       List<Uint8List> slikeGalerija = new List<Uint8List>();
                       if (obavijestiData.obavijesti[index].slike != null) {
                         obavijestiData.obavijesti[index].slike.forEach((slika) {

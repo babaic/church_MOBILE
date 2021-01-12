@@ -87,7 +87,10 @@ class _NovostiScreenState extends State<NovostiScreen> {
                     controller: _scrollController,
                     itemCount: novostiData.novosti.length,
                     itemBuilder: (ctx, index) {
-                      Uint8List glavnaSlika = Base64Codec().decode(novostiData.novosti[index].glavnaSlika);
+                      Uint8List glavnaSlika;
+                      if(novostiData.novosti[index].glavnaSlika != null) {
+                        glavnaSlika = Base64Codec().decode(novostiData.novosti[index].glavnaSlika);
+                      }
                       List<Uint8List> slikeGalerija = new List<Uint8List>();
                       if(novostiData.novosti[index].slike != null) {
                         novostiData.novosti[index].slike.forEach((slika) {

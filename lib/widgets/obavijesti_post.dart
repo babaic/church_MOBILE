@@ -15,6 +15,22 @@ class ObavijestiPost extends StatelessWidget {
   final int kategorijaId;
   ObavijestiPost(this.glavnaSlika, this.naslov, this.datum, this.id, this.text,
       this.kategorija, this.kategorijaId);
+
+
+  _wImage(Uint8List glavnaSlika) {
+    if(glavnaSlika != null) {
+      print('its null');
+      return Image.memory(
+                      glavnaSlika,
+                      fit: BoxFit.cover,
+                    );
+    }
+    else return Image.network(
+                      'https://i.imgur.com/HjZLnil.png',
+                      fit: BoxFit.cover,
+                    );
+  }
+  
   @override
   Widget build(BuildContext context) {
     print('ObavijestiPost build');
@@ -45,10 +61,7 @@ class ObavijestiPost extends StatelessWidget {
                 width: deviceSize.width * 0.4,
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
-                    child: Image.memory(
-                      glavnaSlika,
-                      fit: BoxFit.cover,
-                    )),
+                    child: _wImage(glavnaSlika)),
               ),
               Expanded(
                 child: Container(
