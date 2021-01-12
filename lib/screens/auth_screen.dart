@@ -20,8 +20,14 @@ class _AuthScreenState extends State<AuthScreen> {
   AuthMode _authMode = AuthMode.Login;
   final _passwordController = TextEditingController();
 
+  var _isLoading = false;
+
   Future<void> submitForm(AuthMode authMode) async {
     var authProvider = Provider.of<Auth>(context, listen: false);
+
+    setState(() {
+      _isLoading = true;
+    });
 
     if (!_formKey.currentState.validate()) {
       return;
@@ -46,6 +52,10 @@ class _AuthScreenState extends State<AuthScreen> {
         _showErrorDialog(error);
       }
     }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void _showErrorDialog(String message) {
@@ -207,7 +217,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                   ),
                   Container(
-                    child: RaisedButton(
+                    child: _isLoading ? CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColorDark)) : RaisedButton(
                       color: Theme.of(context).accentColor,
                       child: Text(
                         _authMode == AuthMode.Login
